@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    
+    <head th:replace="~{layout/plantilla :: head}"></head>
+    
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        
+        <div class="container mt-4">
+            <!-- Título y botón para agregar producto -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Catálogo de Productos</h1>
+                <div>
+                    <a th:href="@{/producto/nuevo}" class="btn" style="background-color: #c49f79; color: black;">
+                        <i class="fas fa-plus-circle"></i> Nuevo Producto
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Filtro por categoría -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Filtrar por categoría</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a th:href="@{/producto/listado}" class="btn btn-sm btn-outline-secondary">Todos</a>
+                        <a th:each="categoria : ${categorias}" 
+                           th:href="@{/producto/listado/}+${categoria.idCategoria}"
+                           th:text="${categoria.descripcion}"
+                           class="btn btn-sm btn-outline-secondary"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mensaje de sin productos -->
+            <div th:if="${productos == null || productos.empty}" class="alert alert-info">
+                No hay productos disponibles para mostrar.
+            </div>
+            
+            <!-- Grid de productos -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+                <div th:each="producto : ${productos}" class="col">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <!-- Imagen del producto -->
+                        <div class="position-relative">
+                            <img th:src="${producto.rutaImagen}" 
+                                 th:alt="${producto.nombre}" 
+                                 class="card-img-top" 
+                                 style="height: 250px; object-fit: cover;"
+                                 onerror="this.src='https://placehold.co/600x400/c49f79/fff?text=Joyería+Bruma';">
+                            <!-- Badge de stock -->
+                            <span th:if="${producto.existencias <= 0}" 
+                                  class="position-absolute top-0 end-0 badge bg-danger m-2">
+                                Agotado
+                            </span>
+                            <span th:if="${producto.existencias > 0 && producto.existencias <= 5}" 
+                                  class="position-absolute top-0 end-0 badge bg-warning text-dark m-2">
+                                Últimas unidades
+                            </span>
+                        </div>
+                        
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${producto.nombre}">Nombre del Producto</h5>
+                            <p class="card-text text-muted" th:text="${producto.material}">Material</p>
+                            <p class="card-text" th:text="${producto.descripcion}">Descripción del producto</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="fs-5 fw-bold" th:text="'₡' + ${#numbers.formatDecimal(producto.precio, 0, 'COMMA', 0, 'POINT')}">₡0</span>
+                                <span class="badge bg-secondary" th:text="'Stock: ' + ${producto.existencias}">Stock: 0</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="card-footer bg-white border-0">
+                            <div class="d-flex justify-content-between">
+                                <!-- Botón para agregar al carrito (funcionalidad para implementar después) -->
+                                <button class="btn" style="background-color: #c49f79; color: black;"
+                                        th:disabled="${producto.existencias <= 0}">
+                                    <i class="fas fa-shopping-cart"></i> Añadir al carrito
+                                </button>
+                                
+                                <!-- Botones de administración -->
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/producto/modificar/}+${producto.idProducto}" 
+                                       class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/producto/eliminar/}+${producto.idProducto}" 
+                                       class="btn btn-outline-danger"
+                                       onclick="return confirm('¿Está seguro de eliminar este producto?');">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+    </body>
+</html>

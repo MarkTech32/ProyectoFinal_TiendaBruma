@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductoService {
@@ -13,38 +14,39 @@ public class ProductoService {
     @Autowired
     private ProductoRepository productoRepository;
     
+    @Transactional(readOnly=true)
+    public List<Producto> getProductos(boolean activos) {
+        var productos = productoRepository.findAll();
+        if (activos) {
+            productos.removeIf(p -> !p.isActivo());
+        }
+        
+        return productos;
+    }
     
     @Transactional(readOnly=true)
-    public List<Producto> getProductos(boolean activos){
-        var lista = productoRepository.findAll();
-        
-        
-        return lista;
+    public List<Producto> getProductosPorCategoria(Long idCategoria) {
+        var productos = productoRepository.findAll();
+        return productos.stream()
+                .filter(p -> p.getCategoria() != null && 
+                             p.getCategoria().getIdCategoria() != null && 
+                             p.getCategoria().getIdCategoria().equals(idCategoria))
+                .collect(Collectors.toList());
     }
     
-    //Metodo de Get
     @Transactional(readOnly=true)
-    public Producto getProducto(Producto producto){
-        producto = productoRepository.findById(producto.getIdProducto()).orElse(null);
-        
-        return producto;
+    public Producto getProducto(Producto producto) {
+        return productoRepository.findById(producto.getIdProducto()).orElse(null);
     }
     
-    //Metodos de Delete
     @Transactional
-    public void delete(Producto producto){
-        //Si el idProducto pasado existe, se elimina ese registro
-         productoRepository.delete(producto);
-        
+    public void delete(Producto producto) {
+        productoRepository.delete(producto);
     }
     
-    //Metodos de Save
     @Transactional
-    public void save(Producto producto){
-        //Si el objeto producto tiene info en idProducto, se actualiza el registro
-        //Si el objeto producto NO tiene info en idProducto, se inserta un nuevo registro
-         productoRepository.save(producto);
-        
+    public void save(Producto producto) {
+        productoRepository.save(producto);
     }
 
 }
