@@ -1,0 +1,21 @@
+/*Setear el color beige del background para el navbar y el footer*/
+.bg-bruma {
+    background-color: #f6f1eb !important;
+}
+
+.navbar-bruma {
+    background-color: #f6f1eb !important;
+}
+
+.navbar-nav .nav-link {
+    color: black !important;       /* Cambiando el color de la letra a negro */
+    font-size: 1.4rem !important;  /* Aumenta el tamaño de la letra */
+    font-weight: 500 !important;    /* Hace la letra un poco más gruesa */
+}
+
+/* Efecto hover en los nav items - Similar a los casos de uso */
+.navbar-nav .nav-link:hover {
+    color: #333 !important;
+    text-decoration: underline;
+}
+

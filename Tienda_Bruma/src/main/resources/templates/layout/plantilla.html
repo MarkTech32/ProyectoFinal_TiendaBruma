@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:fragment="head">
+        <title>Joyería Bruma</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        
+        <!-- Scripts para el uso de bootstrap -->
+        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/js/rutinas.js}"></script>
+        
+        <!-- Script para usar el styles.css -->
+        <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+        
+    </head>
+    <body th:fragment="body">
+        
+        <!-- Código para la barra de navegación -->
+        <header th:fragment="header" class="header">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-bruma">
+                <div class="container">
+                    <a class="navbar-brand" th:href="@{/}">
+                        <img th:src="@{/images/BrumaLogo.png}" alt="Joyería Bruma" height="150" class="d-inline-block align-text-top"/>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" th:href="@{/}">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/categoria/listado}">Categorías</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/producto/listado}">Productos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/contacto}">Contacto</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div th:fragment="content">
+            <div class="container mt-3">
+                <div th:replace="${content}">
+                    <!-- El contenido será reemplazado por las vistas -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Código para el footer/barra de abajo de la página -->
+        <footer th:fragment="footer" class="p-3 mt-5 bg-bruma text-black">
+            <div class="container">
+                <p class="text-center">&copy; 2025 Bruma - Todos los derechos reservados</p>
+            </div>
+        </footer>
+
+    </body>
+</html>
