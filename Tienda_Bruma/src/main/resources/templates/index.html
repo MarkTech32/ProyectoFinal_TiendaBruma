@@ -11,6 +11,101 @@
     <body>
         
         <header th:replace="~{layout/plantilla :: header}"/>
+        
+        <!-- Banner principal con imagen de fondo -->
+        <div class="container-fluid p-0">
+            <div class="position-relative">
+                <img th:src="@{/images/banner-joyeria.jpg}" class="img-fluid w-100" alt="Joyería Bruma" style="max-height: 500px; object-fit: cover;">
+                    <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                        <h1 class="display-4 fw-bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">Bienvenidos a Joyería Bruma</h1>
+                        <p class="lead" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">Donde la elegancia se encuentra con el arte</p>
+                        <a th:href="@{/producto/listado}" class="btn btn-lg" style="background-color: #c49f79; color: black;">Ver Colección</a>
+                    </div>
+            </div>
+        </div>
+
+        <!-- Sección Quiénes Somos -->
+        <div class="container mt-5">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="mb-4">Sobre Nosotros</h2>
+                    <p class="lead">En Joyería Bruma, creamos piezas únicas que reflejan la belleza y la personalidad de quienes las lucen.</p>
+                    <p>Fundada en 2010, nuestra joyería se especializa en diseños artesanales de la más alta calidad. Cada pieza es creada con atención meticulosa al detalle, utilizando materiales nobles como oro, plata y piedras preciosas seleccionadas con cuidado.</p>
+                    <p>Nuestro compromiso es ofrecer no solo joyas, sino también experiencias y recuerdos que perdurarán para toda la vida.</p>
+                    <a th:href="@{/nosotros}" class="btn mt-3" style="background-color: #c49f79; color: black;">Conocer más</a>
+                </div>
+                <div class="col-md-6">
+                    <img th:src="@{/images/about-joyeria.jpg}" class="img-fluid rounded-3 shadow" alt="Nuestro taller">
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorías Destacadas -->
+        <div class="container mt-5 pt-3">
+            <h2 class="text-center mb-4">Nuestras Colecciones</h2>
+            <div class="row g-4">
+                <!-- Conchas -->
+                <div class="col-md-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img th:src="@{/images/conchas.jpg}" class="card-img-top" alt="Conchas">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Conchas</h5>
+                                <p class="card-text">Diseños para viajes playeros</p>
+                                <a th:href="@{/categoria/1}" class="btn" style="background-color: #c49f79; color: black;">Ver Conchas</a>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- Pulseras -->
+                <div class="col-md-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img th:src="@{/images/pulseras.jpg}" class="card-img-top" alt="Pulseras">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Pulseras</h5>
+                                <p class="card-text">Elegancia para tu muñeca</p>
+                                <a th:href="@{/categoria/2}" class="btn" style="background-color: #c49f79; color: black;">Ver Pulseras</a>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- Collares -->
+                <div class="col-md-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img th:src="@{/images/collares.jpg}" class="card-img-top" alt="Collares">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Collares</h5>
+                                <p class="card-text">Piezas que capturan miradas</p>
+                                <a th:href="@{/categoria/3}" class="btn" style="background-color: #c49f79; color: black;">Ver Collares</a>
+                            </div>
+                    </div>
+                </div>
+
+                <!-- Aretes -->
+                <div class="col-md-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img th:src="@{/images/aretes.jpg}" class="card-img-top" alt="Aretes">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Aretes</h5>
+                                <p class="card-text">El toque final para tu estilo</p>
+                                <a th:href="@{/categoria/4}" class="btn" style="background-color: #c49f79; color: black;">Ver Aretes</a>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner Promocional -->
+        <div class="container-fluid mt-5 py-5" style="background-color: #f5f1ec;">
+            <div class="container">
+                <div class="row justify-content-center text-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-3">Elegancia en cada detalle</h2>
+                        <p class="lead mb-4">Descubre nuestra nueva colección 2025 con diseños exclusivos que reflejan tu personalidad</p>
+                        <a th:href="@{/producto/listado}" class="btn btn-lg" style="background-color: #c49f79; color: black;">Explorar ahora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <footer th:replace="~{layout/plantilla :: footer}"/>
    
