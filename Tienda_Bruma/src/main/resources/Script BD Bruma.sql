@@ -1,42 +1,44 @@
+/*Se verifica y se elimina la base de datos si existe antes de crearla nuevamente */
+DROP SCHEMA IF EXISTS bruma;
+DROP USER IF EXISTS usuario_prueba;
+DROP USER IF EXISTS usuario_reportes;
+
 /*Se crea la base de datos */
-drop schema if exists bruma;
-drop user if exists usuario_prueba;
-drop user if exists usuario_reportes;
 CREATE SCHEMA bruma;
 
 /*Se crea un usuario para la base de datos llamado "usuario_prueba" y tiene la contraseña "Usuario_Clave."*/
-create user 'usuario_prueba'@'%' identified by 'Usuar1o_Clave.';
-create user 'usuario_reportes'@'%' identified by 'Usuar1o_Reportes.';
+CREATE USER 'usuario_prueba'@'%' IDENTIFIED BY 'Usuar1o_Clave.';
+CREATE USER 'usuario_reportes'@'%' IDENTIFIED BY 'Usuar1o_Reportes.';
 
 /*Se asignan los privilegios sobre la base de datos Bruma al usuario creado */
-grant all privileges on bruma.* to 'usuario_prueba'@'%';
-grant select on bruma.* to 'usuario_reportes'@'%';
-flush privileges;
+GRANT ALL PRIVILEGES ON bruma.* TO 'usuario_prueba'@'%';
+GRANT SELECT ON bruma.* TO 'usuario_reportes'@'%';
+FLUSH PRIVILEGES;
 
-use bruma;
+USE bruma;
 
 /* la tabla de categoria contiene categorias de productos de joyería*/
-create table categoria (
+CREATE TABLE categoria (
   id_categoria INT NOT NULL AUTO_INCREMENT,
   descripcion VARCHAR(30) NOT NULL,
-  ruta_imagen varchar(1024),
-  activo bool,
+  ruta_imagen VARCHAR(1024),
+  activo BOOL,
   PRIMARY KEY (id_categoria))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-create table producto (
+CREATE TABLE producto (
   id_producto INT NOT NULL AUTO_INCREMENT,
   id_categoria INT NOT NULL,
   nombre VARCHAR(50) NOT NULL,  
   descripcion VARCHAR(1600) NOT NULL, 
   material VARCHAR(50),
-  precio double,
-  existencias int,  
-  ruta_imagen varchar(1024),
-  activo bool,
+  precio DOUBLE,
+  existencias INT,  
+  ruta_imagen VARCHAR(1024),
+  activo BOOL,
   PRIMARY KEY (id_producto),
-  foreign key fk_producto_categoria (id_categoria) references categoria(id_categoria)  
+  FOREIGN KEY fk_producto_categoria (id_categoria) REFERENCES categoria(id_categoria)  
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
@@ -44,40 +46,40 @@ DEFAULT CHARACTER SET = utf8mb4;
 /*Se crea la tabla de clientes llamada usuario */
 CREATE TABLE usuario (
   id_usuario INT NOT NULL AUTO_INCREMENT,
-  username varchar(20) NOT NULL,
-  password varchar(512) NOT NULL,
+  username VARCHAR(20) NOT NULL,
+  password VARCHAR(512) NOT NULL,
   nombre VARCHAR(20) NOT NULL,
   apellidos VARCHAR(30) NOT NULL,
   correo VARCHAR(75) NULL,
   telefono VARCHAR(15) NULL,
   direccion VARCHAR(200) NULL,
-  ruta_imagen varchar(1024),
-  activo boolean,
+  ruta_imagen VARCHAR(1024),
+  activo BOOLEAN,
   PRIMARY KEY (id_usuario))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-create table factura (
+CREATE TABLE factura (
   id_factura INT NOT NULL AUTO_INCREMENT,
   id_usuario INT NOT NULL,
-  fecha date,  
-  total double,
-  estado int, /* 1=En Proceso, 2=Pagada, 3=Anulada */
+  fecha DATE,  
+  total DOUBLE,
+  estado INT, /* 1=En Proceso, 2=Pagada, 3=Anulada */
   PRIMARY KEY (id_factura),
-  foreign key fk_factura_usuario (id_usuario) references usuario(id_usuario)  
+  FOREIGN KEY fk_factura_usuario (id_usuario) REFERENCES usuario(id_usuario)  
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-create table venta (
+CREATE TABLE venta (
   id_venta INT NOT NULL AUTO_INCREMENT,
   id_factura INT NOT NULL,
   id_producto INT NOT NULL,
-  precio double, 
-  cantidad int,
+  precio DOUBLE, 
+  cantidad INT,
   PRIMARY KEY (id_venta),
-  foreign key fk_ventas_factura (id_factura) references factura(id_factura),
-  foreign key fk_ventas_producto (id_producto) references producto(id_producto) 
+  FOREIGN KEY fk_ventas_factura (id_factura) REFERENCES factura(id_factura),
+  FOREIGN KEY fk_ventas_producto (id_producto) REFERENCES producto(id_producto) 
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
@@ -111,8 +113,8 @@ INSERT INTO producto (id_producto, id_categoria, nombre, descripcion, material, 
 (12, 3, 'Collar Choker Diamantes', 'Collar estilo choker con línea de pequeños diamantes engarzados en oro rosa de 14k. Diseño contemporáneo y elegante.', 'Oro rosa 14k, Diamantes', 370000, 2, 'https://images.unsplash.com/photo-1611107683227-e9060eccd846', true),
 (13, 4, 'Aretes Candelabro', 'Impresionantes aretes estilo candelabro con rubíes y pequeños diamantes. Elaborados en oro amarillo de 18k, añaden glamour a cualquier atuendo.', 'Oro amarillo 18k, Rubíes, Diamantes', 490000, 2, 'https://images.unsplash.com/photo-1625741737936-ba10df029b09', true),
 (14, 4, 'Aretes Botón Perla', 'Clásicos aretes tipo botón con perlas cultivadas de 10mm y un pequeño diamante en la parte superior. Montados en oro blanco de 14k.', 'Oro blanco 14k, Perlas, Diamantes', 180000, 8, 'https://images.unsplash.com/photo-1629224316810-9d8805b95e76', true),
-(15, 4, 'Aretes Huggie Esmeraldas', 'Pequeños aretes tipo huggie (pegados al lóbulo) con esmeraldas engarzadas en todo el contorno. Elaborados en oro amarillo de 18k.', 'Oro amarillo 18k, Esmeraldas', 350000, 4, 'https://images.unsplash.com/photo-1636138488723-ba3171fe1663', true),
-(16,, 4, 'Aretes Largos Cascada', 'Espectaculares aretes largos con diseño de cascada de diamantes pequeños. Elaborados en platino, son ideales para eventos especiales.', 'Platino, Diamantes', 540000, 2, 'https://images.unsplash.com/photo-1642669294727-66e841771aed', true);
+(15, 4, 'Aretes Topacios Azules', 'Elegantes aretes con topacios azules en forma de lágrima. Montados en plata esterlina con detalles de filigrana.', 'Plata 925, Topacios', 350000, 4, 'https://images.unsplash.com/photo-1633810333882-a32d30ae2326', true),
+(16, 4, 'Aretes Largos Cascada', 'Espectaculares aretes largos con diseño de cascada de diamantes pequeños. Elaborados en platino, son ideales para eventos especiales.', 'Platino, Diamantes', 540000, 2, 'https://images.unsplash.com/photo-1642669294727-66e841771aed', true);
 
 /*Se crean 6 facturas */   /*1=En Proceso, 2=Pagada, 3=Anulada*/
 INSERT INTO factura (id_factura, id_usuario, fecha, total, estado) VALUES
@@ -143,23 +145,23 @@ INSERT INTO venta (id_venta, id_factura, id_producto, precio, cantidad) values
 (17, 6, 15, 350000, 1),
 (18, 6, 14, 180000, 1);
 
-create table role (  
-  rol varchar(20),
+CREATE TABLE role (  
+  rol VARCHAR(20),
   PRIMARY KEY (rol)  
 );
 
-insert into role (rol) values ('ADMIN'), ('VENDEDOR'), ('USER');
+INSERT INTO role (rol) VALUES ('ADMIN'), ('VENDEDOR'), ('USER');
 
-create table rol (
+CREATE TABLE rol (
   id_rol INT NOT NULL AUTO_INCREMENT,
-  nombre varchar(20),
-  id_usuario int,
+  nombre VARCHAR(20),
+  id_usuario INT,
   PRIMARY KEY (id_rol)
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
-insert into rol (id_rol, nombre, id_usuario) values
+INSERT INTO rol (id_rol, nombre, id_usuario) VALUES
  (1, 'ADMIN', 1), (2, 'VENDEDOR', 1), (3, 'USER', 1),
  (4, 'VENDEDOR', 2), (5, 'USER', 2),
  (6, 'USER', 3);
@@ -169,7 +171,7 @@ CREATE TABLE ruta (
     id_ruta INT AUTO_INCREMENT NOT NULL,
     patron VARCHAR(255) NOT NULL,
     rol_name VARCHAR(50) NOT NULL,
-	PRIMARY KEY (id_ruta))
+    PRIMARY KEY (id_ruta))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
@@ -197,7 +199,7 @@ INSERT INTO ruta (patron, rol_name) VALUES
 CREATE TABLE ruta_permit (
     id_ruta INT AUTO_INCREMENT NOT NULL,
     patron VARCHAR(255) NOT NULL,
-	PRIMARY KEY (id_ruta))
+    PRIMARY KEY (id_ruta))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
@@ -214,7 +216,7 @@ CREATE TABLE constante (
     id_constante INT AUTO_INCREMENT NOT NULL,
     atributo VARCHAR(25) NOT NULL,
     valor VARCHAR(150) NOT NULL,
-	PRIMARY KEY (id_constante))
+    PRIMARY KEY (id_constante))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 

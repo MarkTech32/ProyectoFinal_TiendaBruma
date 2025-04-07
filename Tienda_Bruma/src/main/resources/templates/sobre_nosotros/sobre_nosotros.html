@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/plantilla :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - Bruma</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<!-- Incluir fragmento de header/navegación si existe -->
+<header th:replace="~{layout/plantilla :: header}"/>
+
+
+<!-- Main About Section -->
+<section class="about-section">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="mt-4 mb-4">Nuestra Historia</h2>
+                <p class="lead">
+                    En Bruma, creemos que cada objeto que eliges para tu vida debe ser una extensión de tu personalidad. 
+                    Nacimos con la firme convicción de que las cosas especiales no son solo aquellas que cumplen 
+                    una función, sino las que también cuentan una historia.
+                </p>
+                <p>
+                    Nuestra misión es crear piezas únicas que hablen por ti, que reflejen quién eres y lo que valoras. 
+                    Cada artículo en nuestra tienda ha sido cuidadosamente seleccionado o diseñado con atención 
+                    al detalle, calidad excepcional y un profundo respeto por la artesanía.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <img th:src="@{/images/banner-joyeria.jpg}" class="img-fluid rounded shadow"/>
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+                <div>
+                    <h3 class="mb-3">Nuestros Valores</h3>
+                    <p>
+                        En Bruma entendemos que cada persona es única, y por eso nos esforzamos en ofrecer productos 
+                        que permitan expresar esa individualidad. Trabajamos con artesanos locales y diseñadores 
+                        independientes que comparten nuestra pasión por crear piezas con alma.
+                    </p>
+                    <p>
+                        Más que una tienda, somos un espacio donde encontrarás objetos que resonarán contigo, 
+                        que te acompañarán en tu día a día y se convertirán en parte de tu historia personal.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="value-card bg-light">
+                    <div class="text-center">
+                        <i class="fas fa-gem value-icon"></i>
+                        <h4>Calidad Excepcional</h4>
+                    </div>
+                    <p>Cada pieza que ofrecemos cumple con nuestros altos estándares de calidad. Creemos que los objetos que nos rodean deben estar hechos para durar.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="value-card bg-light">
+                    <div class="text-center">
+                        <i class="fas fa-hand-holding-heart value-icon"></i>
+                        <h4>Productos con Propósito</h4>
+                    </div>
+                    <p>Nos esforzamos por crear y seleccionar productos que no solo sean hermosos, sino que también tengan significado y propósito en la vida de quienes los adquieren.</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="value-card bg-light">
+                    <div class="text-center">
+                        <i class="fas fa-leaf value-icon"></i>
+                        <h4>Respeto por el Entorno</h4>
+                    </div>
+                    <p>Trabajamos con materiales sostenibles y procesos responsables, siempre buscando minimizar nuestro impacto en el medio ambiente mientras creamos belleza.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="mt-4 py-5 bg-light">
+    <div class="container text-center">
+        <h3>Descubre nuestra colección</h3>
+        <p class="mb-4">Te invitamos a explorar nuestras piezas especiales y encontrar aquellas que hablen de ti.</p>
+        <a class="btn btn-dark px-4 py-2" th:href="@{/producto/listado}">Ver Productos</a>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<footer th:replace="~{layout/plantilla :: footer}"/>
+
+</body>
+</html>
