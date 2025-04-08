@@ -15,8 +15,7 @@
                             <h4 th:text="${producto.idProducto != null ? 'Editar Producto' : 'Nuevo Producto'}" class="m-0">Gestión de Producto</h4>
                         </div>
                         <div class="card-body">
-                            <form th:action="@{/producto/guardar}" method="POST" th:object="${producto}">
-                                <!-- Campo oculto para el ID (en caso de edición) -->
+                            <form th:action="@{/producto/guardar}" method="POST" th:object="${producto}" enctype="multipart/form-data">                                <!-- Campo oculto para el ID (en caso de edición) -->
                                 <input type="hidden" th:field="*{idProducto}">
                                 
                                 <!-- Selección de categoría -->
@@ -51,12 +50,13 @@
                                               placeholder="Descripción detallada del producto"></textarea>
                                 </div>
                                 
-                                <!-- URL de la imagen (temporal hasta implementar Firebase) -->
+                                <!-- Subida de imágenes para Firebase -->
                                 <div class="mb-3">
-                                    <label for="rutaImagen" class="form-label">URL de la imagen</label>
-                                    <input type="text" th:field="*{rutaImagen}" class="form-control" id="rutaImagen" 
-                                           placeholder="URL de una imagen (temporal)">
-                                    <small class="form-text text-muted">Ingrese la URL de una imagen externa (será reemplazado con Firebase más adelante)</small>
+                                    <label for="imagenFile" class="form-label">Imagen</label>
+                                    <input type="file" class="form-control" id="imagenFile" name="imagenFile" accept="image/*" onchange="readURL(this);">
+                                        <input type="hidden" th:field="*{rutaImagen}" id="rutaImagen">
+                                            <small class="form-text text-muted">Seleccione una imagen de su computador para subir a Firebase</small>
+                                            <img id="imagePreview" src="#" alt="Vista previa de imagen" style="max-height: 200px; display: none;" />
                                 </div>
                                 
                                 <!-- Precio -->

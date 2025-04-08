@@ -3,7 +3,7 @@ package com.bruma.controller;
 import com.bruma.domain.Producto;
 import com.bruma.service.CategoriaService;
 import com.bruma.service.ProductoService;
-//import com.bruma.service.FirebaseStorageService;
+import com.bruma.service.FirebaseStorageService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,15 +78,16 @@ public class ProductoController {
         return "/producto/form";
     }
     
+    /* Ahora que implementamos fireship, este metodo ya no es necesario
     @PostMapping("/guardar")
     public String guardar(Producto producto) {
         // Por ahora, guardamos el producto sin manejar imágenes
         productoService.save(producto);
         
         return "redirect:/producto/listado";
-    }
+    }*/
     
-    /* ---Codigo para una futura implementacion de Fireship----
+    //Implementacion de Fireship - Completada
     @Autowired 
     private FirebaseStorageService firebaseStorageService;
     
@@ -102,5 +103,5 @@ public class ProductoController {
         }
         productoService.save(producto);
         return "redirect:/producto/listado";
-    }*/
+    }
 }
