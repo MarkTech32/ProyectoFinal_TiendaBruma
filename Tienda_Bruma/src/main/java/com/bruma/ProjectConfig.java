@@ -34,7 +34,7 @@ public class ProjectConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/index", "/errores/**", "/carrito/**", "/producto/listado", "/producto/listado/**", 
-                                "/js/**", "/webjars/**", "/css/**", "/images/**", "/login")
+                                "/js/**", "/webjars/**", "/css/**", "/images/**", "/login", "/sobre_nosotros")
                 .permitAll()
                 .requestMatchers("/producto/nuevo", "/producto/guardar", "/producto/modificar/**", "/producto/eliminar/**")
                 .hasRole("ADMIN")
