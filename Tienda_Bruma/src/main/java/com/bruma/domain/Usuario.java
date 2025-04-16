@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.FetchType;
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
@@ -30,10 +32,11 @@ public class Usuario implements Serializable {
     private String correo;
     private String telefono;
     private String direccion;
+    @Column(name = "ruta_imagen", length = 1024)
     private String rutaImagen;
     private boolean activo;
     
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Rol> roles;
 
     public Long getIdUsuario() {
@@ -116,14 +119,11 @@ public class Usuario implements Serializable {
         this.activo = activo;
     }
 
-    public List getRoles() {
+    public List<Rol> getRoles() {
         return roles;
     }
 
-    public void setRoles(List roles) {
+    public void setRoles(List<Rol> roles) {
         this.roles = roles;
     }
-    
-    
-    
 }

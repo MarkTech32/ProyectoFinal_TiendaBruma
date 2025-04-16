@@ -34,9 +34,13 @@ public class ProjectConfig {
         http
             .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/index", "/errores/**", "/carrito/**", "/producto/listado", "/producto/listado/**", 
-                                "/js/**", "/webjars/**", "/css/**", "/images/**", "/login", "/sobre_nosotros")
+                                "/js/**", "/webjars/**", "/css/**", "/images/**", "/login", "/sobre_nosotros", "/contactenos")
                 .permitAll()
+                // Protección de rutas de producto
                 .requestMatchers("/producto/nuevo", "/producto/guardar", "/producto/modificar/**", "/producto/eliminar/**")
+                .hasRole("ADMIN")
+                // Protección de todas las rutas de usuario - solo accesibles para ADMIN
+                .requestMatchers("/usuario/**")
                 .hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
@@ -46,7 +50,6 @@ public class ProjectConfig {
                 .defaultSuccessUrl("/", true)
             )
             .logout((logout) -> logout.permitAll());
-
         return http.build();
     }
 }

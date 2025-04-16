@@ -49,4 +49,32 @@ public class UsuarioService implements UserDetailsService {
                 true, true, true,
                 roles);
     }
+    
+    // Métodos adicionales para el CRUD de usuarios
+    
+    @Transactional(readOnly = true)
+    public List<Usuario> listarUsuarios() {
+        return usuarioRepository.findAll();
+    }
+    
+    @Transactional
+    public void guardar(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+    
+    @Transactional(readOnly = true)
+    public Usuario encontrarUsuario(Usuario usuario) {
+        return usuarioRepository.findById(usuario.getIdUsuario()).orElse(null);
+    }
+    
+    @Transactional
+    public void eliminar(Usuario usuario) {
+        usuarioRepository.delete(usuario);
+    }
+    
+    @Transactional(readOnly = true)
+    public Usuario encontrarPorUsername(String username) {
+        return usuarioRepository.findByUsername(username);
+    }
+    
 }

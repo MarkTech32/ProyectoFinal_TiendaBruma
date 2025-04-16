@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.ForeignKey;
 import java.io.Serializable;
 import lombok.Data;
 
@@ -26,7 +27,8 @@ public class Rol implements Serializable {
     private String nombre;
     
     @ManyToOne
-    @JoinColumn(name = "id_usuario")
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", 
+                foreignKey = @ForeignKey(name = "FK_ROL_USUARIO"))
     private Usuario usuario;
 
     public Long getIdRol() {
@@ -53,5 +55,8 @@ public class Rol implements Serializable {
         this.usuario = usuario;
     }
     
-    
+    @Override
+    public String toString() {
+        return nombre;
+    }
 }

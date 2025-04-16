@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <head th:replace="~{layout/plantilla :: head}"></head>
+    
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        
+        <div class="container mt-4 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow">
+                        <div class="card-header" style="background-color: #c49f79; color: black;">
+                            <h4 th:text="${usuario.idUsuario != null ? 'Editar Usuario' : 'Nuevo Usuario'}" class="m-0">Gestión de Usuario</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Importante: enctype="multipart/form-data" para poder subir archivos -->
+                            <form th:action="@{/usuario/guardar}" method="POST" th:object="${usuario}" enctype="multipart/form-data">
+                                <!-- Campo oculto para el ID (en caso de edición) -->
+                                <input type="hidden" th:field="*{idUsuario}">
+                                
+                                <!-- Username -->
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">Nombre de usuario</label>
+                                    <input type="text" th:field="*{username}" class="form-control" id="username" required 
+                                           placeholder="Nombre de usuario">
+                                </div>
+                                
+                                <!-- Contraseña -->
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">
+                                        <span th:if="${usuario.idUsuario == null}">Contraseña</span>
+                                        <span th:unless="${usuario.idUsuario == null}">Nueva contraseña (dejar en blanco para mantener la actual)</span>
+                                    </label>
+                                    <input type="password" th:field="*{password}" class="form-control" id="password"
+                                           th:required="${usuario.idUsuario == null}" 
+                                           placeholder="Contraseña">
+                                </div>
+                                
+                                <!-- Nombre -->
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre</label>
+                                    <input type="text" th:field="*{nombre}" class="form-control" id="nombre" required 
+                                           placeholder="Nombre">
+                                </div>
+                                
+                                <!-- Apellidos -->
+                                <div class="mb-3">
+                                    <label for="apellidos" class="form-label">Apellidos</label>
+                                    <input type="text" th:field="*{apellidos}" class="form-control" id="apellidos" required 
+                                           placeholder="Apellidos">
+                                </div>
+                                
+                                <!-- Correo -->
+                                <div class="mb-3">
+                                    <label for="correo" class="form-label">Correo electrónico</label>
+                                    <input type="email" th:field="*{correo}" class="form-control" id="correo" required 
+                                           placeholder="ejemplo@correo.com">
+                                </div>
+                                
+                                <!-- Teléfono -->
+                                <div class="mb-3">
+                                    <label for="telefono" class="form-label">Teléfono</label>
+                                    <input type="tel" th:field="*{telefono}" class="form-control" id="telefono" 
+                                           placeholder="Número de teléfono">
+                                </div>
+                                
+                                <!-- Dirección -->
+                                <div class="mb-3">
+                                    <label for="direccion" class="form-label">Dirección</label>
+                                    <textarea th:field="*{direccion}" class="form-control" id="direccion" rows="2" 
+                                              placeholder="Dirección completa"></textarea>
+                                </div>
+                                
+                                <!-- Subida de imágenes para Firebase -->
+                                <div class="mb-3">
+                                    <label for="imagenFile" class="form-label">Imagen de perfil</label>
+                                    <input type="file" class="form-control" id="imagenFile" name="imagenFile" accept="image/*" onchange="readURL(this);">
+                                    <input type="hidden" th:field="*{rutaImagen}" id="rutaImagen">
+                                    <small class="form-text text-muted">Seleccione una imagen de perfil (opcional)</small>
+                                    <div class="mt-2">
+                                        <img id="imagePreview" th:src="${usuario.rutaImagen != null && usuario.rutaImagen != '' ? usuario.rutaImagen : '#'}" 
+                                             alt="Vista previa de imagen" 
+                                             style="max-height: 150px; display: none;" 
+                                             th:style="${usuario.rutaImagen != null && usuario.rutaImagen != '' ? 'max-height: 150px;' : 'max-height: 150px; display: none;'}" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Activo -->
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" th:field="*{activo}" class="form-check-input" id="activo">
+                                    <label class="form-check-label" for="activo">Usuario Activo</label>
+                                </div>
+                                
+                                <!-- Roles actuales -->
+                                <div class="mb-3" th:if="${usuario.idUsuario != null && usuario.roles != null && !usuario.roles.isEmpty()}">
+                                    <label class="form-label">Roles actuales</label>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span th:each="rol : ${usuario.roles}" class="badge" style="background-color: #c49f79; color: black;">
+                                            <span th:text="${rol.nombre}"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Añadir nuevo rol -->
+                                <div class="mb-3">
+                                    <label for="nuevoRol" class="form-label">Añadir rol</label>
+                                    <select name="nuevoRol" id="nuevoRol" class="form-select">
+                                        <option value="">-- Seleccione un rol --</option>
+                                        <option value="ADMIN">ADMIN</option>
+                                        <option value="USER">USER</option>
+                                        <option value="VENDEDOR">VENDEDOR</option>
+                                    </select>
+                                    <small class="form-text text-muted">
+                                        Seleccione un rol para asignar al usuario. Los roles existentes se mantendrán.
+                                    </small>
+                                </div>
+                                
+                                <!-- Botones de acción -->
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a th:href="@{/usuario/listado}" class="btn btn-secondary me-md-2">Cancelar</a>
+                                    <button type="submit" class="btn" style="background-color: #c49f79; color: black;">Guardar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+    </body>
+</html>

@@ -63,9 +63,15 @@
                                     <span sec:authentication="name">Usuario</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <!-- Menú de administración actualizado -->
+                                    <li sec:authorize="hasRole('ADMIN')">
+                                        <a class="dropdown-item" th:href="@{/usuario/listado}">
+                                            <i class="fas fa-users me-1"></i>Administrar Usuarios
+                                        </a>
+                                    </li>
                                     <li sec:authorize="hasRole('ADMIN')">
                                         <a class="dropdown-item" th:href="@{/producto/listado}">
-                                            <i class="fas fa-cog me-1"></i>Administración
+                                            <i class="fas fa-gem me-1"></i>Administrar Productos
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
