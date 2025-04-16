@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+    >
+<head th:replace="~{layout/plantilla :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - Bruma</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<!-- Incluir fragmento de header/navegación si existe -->
+<header th:replace="~{layout/plantilla :: header}"/>
+
+<!-- Banner de contacto -->
+<div class="container-fluid p-0">
+    <div class="position-relative">
+        <img th:src="@{/images/banner-joyeria.jpg}" class="img-fluid w-100" alt="Contáctenos" style="max-height: 300px; object-fit: cover;">
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+            <h1 class="display-4 fw-bold" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">Contáctenos</h1>
+            <p class="lead" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.7);">Estamos para atenderte</p>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Redes Sociales -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2 class="mb-4">Nuestras Redes Sociales</h2>
+            <p class="lead mb-4">Conéctate con nosotros y descubre nuestras últimas creaciones</p>
+            
+            <div class="d-flex flex-column gap-4">                
+                <!-- Instagram -->
+                <div class="d-flex align-items-center">
+                    <div class="social-icon rounded-circle p-3 me-3" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                        <i class="fab fa-instagram text-white fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">Instagram</h5>
+                        <p class="mb-0">@bruma_joyeria</p>
+                        <a href="https://www.instagram.com/brumajewelry_cr/" target="_blank" class="text-decoration-none" style="color: #c49f79;">Visitar perfil</a>
+                    </div>
+                </div>
+                
+                <!-- WhatsApp -->
+                <div class="d-flex align-items-center">
+                    <div class="social-icon bg-success rounded-circle p-3 me-3">
+                        <i class="fab fa-whatsapp text-white fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">WhatsApp</h5>
+                        <p class="mb-0">+506 2233 4455</p>
+                        <a href="https://wa.me/50664532788" target="_blank" class="text-decoration-none" style="color: #c49f79;">Enviar mensaje</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mt-4 mt-lg-0">
+            <img th:src="@{/images/BrumaLogo.png}" class="img-fluid rounded-3 shadow" alt="Contáctenos">
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Preguntas Frecuentes -->
+<div class="container mt-5 py-4" style="background-color: #f5f1ec; border-radius: 10px;">
+    <h2 class="text-center mb-4">Preguntas Frecuentes</h2>
+    
+    <div class="accordion" id="accordionFAQ">
+        <!-- Pregunta 1: Opciones de pago -->
+        <div class="accordion-item border-0 mb-3 shadow-sm">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background-color: #c49f79; color: black;">
+                    ¿Qué opciones de pago aceptan?
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body">
+                    <p>En Joyería Bruma aceptamos diversas formas de pago para facilitar tu experiencia:</p>
+                    <ul>
+                        <li><strong>Tarjetas de crédito y débito:</strong> Visa, MasterCard, American Express</li>
+                        <li><strong>Transferencia bancaria:</strong> A nuestra cuenta en Banco Nacional</li>
+                        <li><strong>Pagos digitales:</strong> PayPal y SINPE Móvil</li>
+                    </ul>
+                    <p>Todos nuestros métodos de pago son seguros y garantizamos la protección de tus datos personales.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pregunta 2: Tienda física -->
+        <div class="accordion-item border-0 mb-3 shadow-sm">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="background-color: #c49f79; color: black;">
+                    ¿Tienen tienda física o son exclusivamente online?
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body">
+                    <p>Actualmente, Joyería Bruma es una tienda 100% virtual. Hemos optado por este modelo para:</p>
+                    <ul>
+                        <li>Ofrecer precios más competitivos al reducir costos operativos</li>
+                        <li>Llegar a clientes en todo el país sin limitaciones geográficas</li>
+                        <li>Brindar una experiencia de compra cómoda y segura desde cualquier lugar</li>
+                    </ul>
+                    <p>Sin embargo, para casos especiales, podemos coordinar citas personalizadas para que conozcas nuestras piezas antes de realizar tu compra. Contáctanos por WhatsApp para más información.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pregunta 3: Entregas y envíos -->
+        <div class="accordion-item border-0 shadow-sm">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="background-color: #c49f79; color: black;">
+                    ¿Cómo funcionan los envíos y entregas?
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionFAQ">
+                <div class="accordion-body">
+                    <p>Nuestro proceso de entrega es simple y eficiente:</p>
+                    <ul>
+                        <li><strong>Tiempo de entrega:</strong> 2-5 días hábiles dependiendo de tu ubicación</li>
+                        <li><strong>Cobertura:</strong> Enviamos a todo el país</li>
+                        <li><strong>Seguimiento:</strong> Proporcionamos un código de seguimiento para que puedas rastrear tu pedido en tiempo real</li>
+                        <li><strong>Empaque:</strong> Todas nuestras piezas se envían en cajas elegantes y protegidas para garantizar que lleguen en perfectas condiciones</li>
+                    </ul>
+                    <p>Para pedidos especiales o internacionales, por favor contáctanos directamente para brindarte información personalizada.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Footer Section -->
+<footer th:replace="~{layout/plantilla :: footer}"/>
+
+</body>
+</html>
