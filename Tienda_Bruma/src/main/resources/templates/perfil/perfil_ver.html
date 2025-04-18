@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+    >
+<head th:replace="~{layout/plantilla :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - Bruma</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<!-- Incluir fragmento de header/navegación si existe -->
+<header th:replace="~{layout/plantilla :: header}"/>
+
+<div class="container mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 class="mb-4">Mi Perfil</h2>
+                    
+                    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <span th:text="${mensaje}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 text-center mb-4">
+                                    <img th:if="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
+                                         th:src="${usuario.rutaImagen}" 
+                                         alt="Foto de perfil" 
+                                         class="img-fluid rounded-circle mb-3" 
+                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                    <img th:unless="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
+                                         th:src="@{/images/default-profile.png}" 
+                                         alt="Foto de perfil por defecto" 
+                                         class="img-fluid rounded-circle mb-3" 
+                                         style="width: 150px; height: 150px; object-fit: cover;">
+                                    
+                                    <div>
+                                        <a th:href="@{/perfil/editar}" class="btn btn-primary">
+                                            <i class="fas fa-edit me-1"></i>Editar Perfil
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-9">
+                                    <h3 th:text="${usuario.nombre + ' ' + usuario.apellidos}" class="mb-3">Nombre Completo</h3>
+                                    
+                                    <div class="mb-3">
+                                        <h5 class="mb-3">Información de contacto</h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong><i class="fas fa-user me-2"></i>Usuario:</strong> <span th:text="${usuario.username}"></span></p>
+                                                <p><strong><i class="fas fa-envelope me-2"></i>Correo:</strong> <span th:text="${usuario.correo ?: 'No especificado'}"></span></p>
+                                                <p><strong><i class="fas fa-phone me-2"></i>Teléfono:</strong> <span th:text="${usuario.telefono ?: 'No especificado'}"></span></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong><i class="fas fa-map-marker-alt me-2"></i>Dirección:</strong> <span th:text="${usuario.direccion ?: 'No especificada'}"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Footer Section -->
+<footer th:replace="~{layout/plantilla :: footer}"/>
+
+</body>
+</html>

@@ -38,8 +38,8 @@ public class ProjectConfig {
                 .permitAll()
                 // Protección de rutas de producto
                 .requestMatchers("/producto/nuevo", "/producto/guardar", "/producto/modificar/**", "/producto/eliminar/**")
-                .hasRole("ADMIN")
-                // Protección de todas las rutas de usuario - solo accesibles para ADMIN
+                .hasAnyRole("ADMIN", "VENDEDOR")
+                // Protección de todas las rutas de usuario - solo accesibles para ADMIN 
                 .requestMatchers("/usuario/**")
                 .hasRole("ADMIN")
                 .anyRequest().authenticated()
