@@ -4,7 +4,7 @@ import com.bruma.domain.Producto;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductoRepository extends JpaRepository<Producto, Long> {
+public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     
     // Método para encontrar productos por ID de categoría
     List<Producto> findByCategoria_IdCategoria(Long idCategoria);

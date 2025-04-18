@@ -2,6 +2,7 @@ package com.bruma.service;
 
 import com.bruma.domain.Rol;
 import com.bruma.domain.Usuario;
+import com.bruma.repository.RolRepository;
 import com.bruma.repository.UsuarioRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,9 @@ public class UsuarioService implements UserDetailsService {
     
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private RolRepository rolRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -69,6 +73,7 @@ public class UsuarioService implements UserDetailsService {
     
     @Transactional
     public void eliminar(Usuario usuario) {
+        rolRepository.deleteByUsuarioId(usuario.getIdUsuario());
         usuarioRepository.delete(usuario);
     }
     

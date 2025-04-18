@@ -12,15 +12,15 @@ public class Producto implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_producto")
-    private Long idProducto;
+    @Column(name = "id_producto")
+    private Integer idProducto;
     
     private String nombre;
     private String descripcion;
     private String material;
     private double precio;
     private int existencias;
-    @Column(name="ruta_imagen")
+    @Column(name = "ruta_imagen", length = 1024)
     private String rutaImagen;
     private boolean activo;
     
@@ -28,11 +28,11 @@ public class Producto implements Serializable {
     @JoinColumn(name="id_categoria")
     private Categoria categoria;
 
-    public Long getIdProducto() {
+    public Integer getIdProducto() {
         return idProducto;
     }
 
-    public void setIdProducto(Long idProducto) {
+    public void setIdProducto(Integer idProducto) {
         this.idProducto = idProducto;
     }
 

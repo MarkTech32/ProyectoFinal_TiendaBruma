@@ -33,7 +33,7 @@ public class FirebaseStorageService {
     //El nombre del archivo Json
     final String archivoJsonFile = "tiendabruma-3aa19-firebase-adminsdk-fbsvc-b1121f95d3"+".json";
 
-    public String cargaImagen(MultipartFile archivoLocalCliente, String carpeta, Long id) {
+    public String cargaImagen(MultipartFile archivoLocalCliente, String carpeta, Integer id) {
         try {
             // El nombre original del archivo local del cliene
             String extension = archivoLocalCliente.getOriginalFilename();

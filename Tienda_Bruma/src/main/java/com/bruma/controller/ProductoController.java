@@ -37,7 +37,7 @@ public class ProductoController {
     }
     
     @GetMapping("/listado/{idCategoria}")
-    public String listadoPorCategoria(@PathVariable("idCategoria") Long idCategoria, Model model) {
+    public String listadoPorCategoria(@PathVariable("idCategoria") Integer idCategoria, Model model) {
         var productos = productoService.getProductosPorCategoria(idCategoria);
         var categorias = categoriaService.getCategorias(true);
         
@@ -56,7 +56,7 @@ public class ProductoController {
     }
     
     @GetMapping("/eliminar/{idProducto}")
-    public String eliminar(@PathVariable("idProducto") Long idProducto) {
+    public String eliminar(@PathVariable("idProducto") Integer idProducto) {
         Producto producto = new Producto();
         producto.setIdProducto(idProducto);
         
@@ -65,7 +65,7 @@ public class ProductoController {
     }
     
     @GetMapping("/modificar/{idProducto}")
-    public String modificar(@PathVariable("idProducto") Long idProducto, Model model) {
+    public String modificar(@PathVariable("idProducto") Integer idProducto, Model model) {
         Producto producto = new Producto();
         producto.setIdProducto(idProducto);
         
@@ -97,7 +97,7 @@ public class ProductoController {
         if(!imagenFile.isEmpty()){
             //Nos pasan una imagen
             productoService.save(producto);
-            String ruta = firebaseStorageService.cargaImagen(imagenFile, 
+            String ruta = firebaseStorageService.cargaImagen(imagenFile,
                     "producto", producto.getIdProducto());
             producto.setRutaImagen(ruta);
         }

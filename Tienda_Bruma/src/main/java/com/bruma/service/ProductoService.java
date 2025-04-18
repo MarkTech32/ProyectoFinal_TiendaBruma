@@ -25,7 +25,7 @@ public class ProductoService {
     }
     
     @Transactional(readOnly=true)
-    public List<Producto> getProductosPorCategoria(Long idCategoria) {
+    public List<Producto> getProductosPorCategoria(Integer idCategoria) {
         var productos = productoRepository.findAll();
         return productos.stream()
                 .filter(p -> p.getCategoria() != null && 

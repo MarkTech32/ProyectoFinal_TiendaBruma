@@ -96,9 +96,9 @@ public class UsuarioController {
             }
             
             String rutaImagen = firebaseStorageService.cargaImagen(
-                    imagenFile, 
+                    imagenFile,
                     "usuarios",
-                    usuario.getIdUsuario());
+                    usuario.getIdUsuario()); 
             
             usuario.setRutaImagen(rutaImagen);
         }

@@ -22,20 +22,20 @@ public class Rol implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rol")
-    private Long idRol;
+    private Integer idRol;
     
     private String nombre;
     
     @ManyToOne
-    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario", 
-                foreignKey = @ForeignKey(name = "FK_ROL_USUARIO"))
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario",
+            foreignKey = @ForeignKey(name = "FK_ROL_USUARIO"))
     private Usuario usuario;
 
-    public Long getIdRol() {
+    public Integer getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(Long idRol) {
+    public void setIdRol(Integer idRol) {
         this.idRol = idRol;
     }
 
