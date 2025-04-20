@@ -49,6 +49,18 @@
                             
                         </ul>
                         <ul class="navbar-nav ms-auto">
+                            
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" th:href="@{/carrito/ver}">
+                                    <i class="fas fa-shopping-cart fa-lg"></i>
+                                    <span th:if="${session.carrito != null and session.carrito.itemCount > 0}" 
+                                          class="position-absolute top-25 start-75 translate-middle badge rounded-pill" 
+                                          style="background-color: #c49f79; color: black;">
+                                        <span th:text="${session.carrito.itemCount}"></span>
+                                    </span>
+                                </a>
+                            </li>
+                            
                             <!-- No autenticado -->
                             <li class="nav-item" sec:authorize="!isAuthenticated()">
                                 <a class="nav-link" th:href="@{/login}">

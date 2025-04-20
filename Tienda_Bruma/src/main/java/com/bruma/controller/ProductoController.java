@@ -1,9 +1,14 @@
 package com.bruma.controller;
 
+import com.bruma.domain.Carrito;
 import com.bruma.domain.Producto;
+import com.bruma.service.CarritoService;
 import com.bruma.service.CategoriaService;
 import com.bruma.service.ProductoService;
 import com.bruma.service.FirebaseStorageService;
+import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,28 +29,84 @@ public class ProductoController {
     @Autowired
     private CategoriaService categoriaService;
     
+    @Autowired
+    private CarritoService carritoService;
+    
     @GetMapping("/listado")
-    public String listado(Model model) {
+    public String listado(Model model, HttpSession session) {
         var productos = productoService.getProductos(false);
         var categorias = categoriaService.getCategorias(true);
         
+        // Agregar el carrito al modelo
+        Carrito carrito = carritoService.getCarrito(session);
+        
+        // Calcular cantidades en carrito
+        Map<Integer, Integer> cantidadesEnCarrito = calcularCantidadesEnCarrito(carrito);
+
+        // Calcular cantidades disponibles
+        Map<Integer, Integer> cantidadesDisponibles = calcularCantidadesDisponibles(productos, cantidadesEnCarrito);
+
+        // Agregar al modelo
         model.addAttribute("productos", productos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("carrito", carrito);
+        model.addAttribute("cantidadesEnCarrito", cantidadesEnCarrito);
+        model.addAttribute("cantidadesDisponibles", cantidadesDisponibles);
         
         return "/producto/listado";
     }
     
     @GetMapping("/listado/{idCategoria}")
-    public String listadoPorCategoria(@PathVariable("idCategoria") Integer idCategoria, Model model) {
+    public String listadoPorCategoria(@PathVariable("idCategoria") Integer idCategoria, Model model, HttpSession session) {
         var productos = productoService.getProductosPorCategoria(idCategoria);
         var categorias = categoriaService.getCategorias(true);
         
+        // Agregar el carrito al modelo
+        Carrito carrito = carritoService.getCarrito(session);
+        
+        // Calcular cantidades en carrito
+        Map<Integer, Integer> cantidadesEnCarrito = calcularCantidadesEnCarrito(carrito);
+
+        // Calcular cantidades disponibles
+        Map<Integer, Integer> cantidadesDisponibles = calcularCantidadesDisponibles(productos, cantidadesEnCarrito);
+
+        // Agregar al modelo
         model.addAttribute("productos", productos);
         model.addAttribute("categorias", categorias);
         model.addAttribute("totalProductos", productos.size());
+        model.addAttribute("carrito", carrito);
+        model.addAttribute("cantidadesEnCarrito", cantidadesEnCarrito);
+        model.addAttribute("cantidadesDisponibles", cantidadesDisponibles);
         
         return "/producto/listado";
+    }
+    
+       // Método para calcular cantidades en carrito por producto
+    private Map<Integer, Integer> calcularCantidadesEnCarrito(Carrito carrito) {
+        Map<Integer, Integer> cantidades = new HashMap<>();
+
+        if (carrito != null && carrito.getItems() != null && !carrito.getItems().isEmpty()) {
+            carrito.getItems().forEach(item -> {
+                if (item.getProducto() != null && item.getProducto().getIdProducto() != null) {
+                    cantidades.put(item.getProducto().getIdProducto(), item.getCantidad());
+                }
+            });
+        }
+
+        return cantidades;
+    }
+
+    // Método para calcular cantidades disponibles (existencias - enCarrito)
+    private Map<Integer, Integer> calcularCantidadesDisponibles(Iterable<Producto> productos, Map<Integer, Integer> cantidadesEnCarrito) {
+        Map<Integer, Integer> disponibles = new HashMap<>();
+
+        for (Producto producto : productos) {
+            int enCarrito = cantidadesEnCarrito.getOrDefault(producto.getIdProducto(), 0);
+            disponibles.put(producto.getIdProducto(), producto.getExistencias() - enCarrito);
+        }
+
+        return disponibles;
     }
     
     @GetMapping("/nuevo")
@@ -77,15 +138,6 @@ public class ProductoController {
         
         return "/producto/form";
     }
-    
-    /* Ahora que implementamos fireship, este metodo ya no es necesario
-    @PostMapping("/guardar")
-    public String guardar(Producto producto) {
-        // Por ahora, guardamos el producto sin manejar imágenes
-        productoService.save(producto);
-        
-        return "redirect:/producto/listado";
-    }*/
     
     //Implementacion de Fireship - Completada
     @Autowired 
