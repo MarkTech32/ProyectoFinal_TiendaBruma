@@ -32,24 +32,27 @@ public class ProjectConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/", "/index", "/errores/**", "/carrito/**", "/producto/listado", "/producto/listado/**", 
-                                "/js/**", "/webjars/**", "/css/**", "/images/**", "/login", "/sobre_nosotros", "/contactenos")
+                .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/", "/index", "/errores/**", "/carrito/**", "/producto/listado", "/producto/listado/**",
+                        "/js/**", "/webjars/**", "/css/**", "/images/**", "/login", "/sobre_nosotros", "/contactenos")
                 .permitAll()
                 // Protección de rutas de producto
                 .requestMatchers("/producto/nuevo", "/producto/guardar", "/producto/modificar/**", "/producto/eliminar/**")
                 .hasAnyRole("ADMIN", "VENDEDOR")
+                // Protección de rutas de perfil de usuario
+                .requestMatchers("/perfil/**", "/metodos_pago/**", "/direcciones/**")
+                .hasAnyRole("USER", "ADMIN", "VENDEDOR")
                 // Protección de todas las rutas de usuario - solo accesibles para ADMIN 
                 .requestMatchers("/usuario/**")
                 .hasRole("ADMIN")
                 .anyRequest().authenticated()
-            )
-            .formLogin((form) -> form
+                )
+                .formLogin((form) -> form
                 .loginPage("/login")
                 .permitAll()
                 .defaultSuccessUrl("/", true)
-            )
-            .logout((logout) -> logout.permitAll());
+                )
+                .logout((logout) -> logout.permitAll());
         return http.build();
     }
 }

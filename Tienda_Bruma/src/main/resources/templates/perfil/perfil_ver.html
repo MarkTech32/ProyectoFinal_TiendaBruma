@@ -20,52 +20,67 @@
 <header th:replace="~{layout/plantilla :: header}"/>
 
 <div class="container mt-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="mb-4">Mi Perfil</h2>
-                    
-                    <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
-                        <span th:text="${mensaje}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-3 text-center mb-4">
-                                    <img th:if="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
-                                         th:src="${usuario.rutaImagen}" 
-                                         alt="Foto de perfil" 
-                                         class="img-fluid rounded-circle mb-3" 
-                                         style="width: 150px; height: 150px; object-fit: cover;">
-                                    <img th:unless="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
-                                         th:src="@{/images/default-profile.png}" 
-                                         alt="Foto de perfil por defecto" 
-                                         class="img-fluid rounded-circle mb-3" 
-                                         style="width: 150px; height: 150px; object-fit: cover;">
-                                    
-                                    <div>
-                                        <a th:href="@{/perfil/editar}" class="btn btn-primary">
-                                            <i class="fas fa-edit me-1"></i>Editar Perfil
-                                        </a>
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Mi Cuenta</h2>
+            
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <!-- Menú de navegación de cuenta -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" th:href="@{/perfil}">Mi Perfil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/direcciones}">Mis Direcciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/metodos-pago}">Metodos de pago</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-4">
+                            <img th:if="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
+                                 th:src="${usuario.rutaImagen}" 
+                                 alt="Foto de perfil" 
+                                 class="img-fluid rounded-circle mb-3" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                            <img th:unless="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
+                                 th:src="@{/images/default-profile.png}" 
+                                 alt="Foto de perfil por defecto" 
+                                 class="img-fluid rounded-circle mb-3" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+                            
+                            <div>
+                                <a th:href="@{/perfil/editar}" class="btn btn-primary">
+                                    <i class="fas fa-edit me-1"></i>Editar Perfil
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-9">
+                            <h3 th:text="${usuario.nombre + ' ' + usuario.apellidos}" class="mb-3">Nombre Completo</h3>
+                            
+                            <div class="mb-3">
+                                <h5 class="mb-3">Información de contacto</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-user me-2"></i>Usuario:</strong> <span th:text="${usuario.username}"></span></p>
+                                        <p><strong><i class="fas fa-envelope me-2"></i>Correo:</strong> <span th:text="${usuario.correo ?: 'No especificado'}"></span></p>
+                                        <p><strong><i class="fas fa-phone me-2"></i>Teléfono:</strong> <span th:text="${usuario.telefono ?: 'No especificado'}"></span></p>
                                     </div>
-                                </div>
-                                
-                                <div class="col-md-9">
-                                    <h3 th:text="${usuario.nombre + ' ' + usuario.apellidos}" class="mb-3">Nombre Completo</h3>
-                                    
-                                    <div class="mb-3">
-                                        <h5 class="mb-3">Información de contacto</h5>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <p><strong><i class="fas fa-user me-2"></i>Usuario:</strong> <span th:text="${usuario.username}"></span></p>
-                                                <p><strong><i class="fas fa-envelope me-2"></i>Correo:</strong> <span th:text="${usuario.correo ?: 'No especificado'}"></span></p>
-                                                <p><strong><i class="fas fa-phone me-2"></i>Teléfono:</strong> <span th:text="${usuario.telefono ?: 'No especificado'}"></span></p>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p><strong><i class="fas fa-map-marker-alt me-2"></i>Dirección:</strong> <span th:text="${usuario.direccion ?: 'No especificada'}"></span></p>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-6">
+                                        <p><strong><i class="fas fa-map-marker-alt me-2"></i>Dirección:</strong> <span th:text="${usuario.direccion ?: 'No especificada'}"></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -74,6 +89,8 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
 <!-- Footer Section -->
 <footer th:replace="~{layout/plantilla :: footer}"/>

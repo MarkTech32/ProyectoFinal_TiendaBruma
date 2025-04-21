@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+    >
+<head th:replace="~{layout/plantilla :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - Bruma</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<!-- Incluir fragmento de header/navegación si existe -->
+<header th:replace="~{layout/plantilla :: header}"/>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow">
+                <div class="card-header" style="background-color: #c49f79; color: black;">
+                    <h4 th:text="${metodoPago.idMetodoPago != null ? 'Editar Método de Pago' : 'Nuevo Método de Pago'}" class="m-0">Gestión de Método de Pago</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/metodos-pago/guardar}" method="POST" th:object="${metodoPago}">
+                        <!-- Campo oculto para el ID (en caso de edición) -->
+                        <input type="hidden" th:field="*{idMetodoPago}">
+
+                            <!-- Tipo de tarjeta -->
+                            <div class="mb-3">
+                                <label for="tipo" class="form-label">Tipo de tarjeta</label>
+                                <select th:field="*{tipo}" class="form-select" id="tipo" required>
+                                    <option value="">-- Seleccione tipo de tarjeta --</option>
+                                    <option value="VISA">VISA</option>
+                                    <option value="MasterCard">MasterCard</option>
+                                    <option value="AMEX">American Express</option>
+                                    <option value="Discover">Discover</option>
+                                </select>
+                            </div>
+
+                            <!-- Nombre del titular -->
+                            <div class="mb-3">
+                                <label for="nombreTitular" class="form-label">Nombre del titular</label>
+                                <input type="text" th:field="*{nombreTitular}" class="form-control" id="nombreTitular" required
+                                       placeholder="Nombre como aparece en la tarjeta">
+                            </div>
+
+                            <!-- Número de tarjeta -->
+                            <div class="mb-3">
+                                <label for="numeroTarjeta" class="form-label">Número de tarjeta</label>
+                                <input type="text" th:field="*{numeroTarjeta}" class="form-control" id="numeroTarjeta" required
+                                       placeholder="Número de tarjeta (sin espacios)"
+                                       pattern="[0-9]{13,19}" maxlength="19">
+                                    <small class="form-text text-muted">Esta información se almacenará de forma segura</small>
+                            </div>
+
+                            <!-- Fecha de expiración -->
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="mesExpiracion" class="form-label">Mes de expiración</label>
+                                    <select th:field="*{mesExpiracion}" class="form-select" id="mesExpiracion" required>
+                                        <option value="">-- Mes --</option>
+                                        <option value="1">01 - Enero</option>
+                                        <option value="2">02 - Febrero</option>
+                                        <option value="3">03 - Marzo</option>
+                                        <option value="4">04 - Abril</option>
+                                        <option value="5">05 - Mayo</option>
+                                        <option value="6">06 - Junio</option>
+                                        <option value="7">07 - Julio</option>
+                                        <option value="8">08 - Agosto</option>
+                                        <option value="9">09 - Septiembre</option>
+                                        <option value="10">10 - Octubre</option>
+                                        <option value="11">11 - Noviembre</option>
+                                        <option value="12">12 - Diciembre</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="anioExpiracion" class="form-label">Año de expiración</label>
+                                    <select th:field="*{anioExpiracion}" class="form-select" id="anioExpiracion" required>
+                                        <option value="">-- Año --</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                        <option value="2031">2031</option>
+                                        <option value="2032">2032</option>
+                                        <option value="2033">2033</option>
+                                        <option value="2034">2034</option>
+                                        <option value="2035">2035</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Predeterminada -->
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" th:field="*{esPrincipal}" class="form-check-input" id="esPrincipal">
+                                    <label class="form-check-label" for="esPrincipal">Establecer como método de pago predeterminado</label>
+                                    <small class="d-block form-text text-muted">Este método de pago se usará automáticamente en tus compras</small>
+                            </div>
+
+                            <!-- Activo (oculto, siempre será true) -->
+                            <input type="hidden" th:field="*{activo}" value="true">
+
+                                <!-- Botones de acción -->
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                    <a th:href="@{/metodos-pago}" class="btn btn-secondary me-md-2">Cancelar</a>
+                                    <button type="submit" class="btn" style="background-color: #c49f79; color: black;">Guardar</button>
+                                </div>
+                                </form>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+                                </div>
+
+
+<!-- Footer Section -->
+<footer th:replace="~{layout/plantilla :: footer}"/>
+
+</body>
+</html>

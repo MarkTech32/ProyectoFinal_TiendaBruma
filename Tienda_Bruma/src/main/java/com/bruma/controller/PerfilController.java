@@ -31,9 +31,15 @@ public class PerfilController {
         // Obtener el usuario autenticado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        
+
         Usuario usuario = usuarioService.encontrarPorUsername(username);
         if (usuario != null) {
+            // NUEVO: Verificar si el usuario tiene dirección, y si no, intentar obtener la predeterminada
+            if ((usuario.getDireccion() == null || usuario.getDireccion().isEmpty()) && usuario.getDireccionPrincipal() != null) {
+                usuario.setDireccion(usuario.getDireccionPrincipal().getDireccionCompleta());
+                usuarioService.guardar(usuario);
+            }
+
             model.addAttribute("usuario", usuario);
             return "perfil/perfil_ver";
         } else {
@@ -46,9 +52,15 @@ public class PerfilController {
         // Obtener el usuario autenticado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
-        
+
         Usuario usuario = usuarioService.encontrarPorUsername(username);
         if (usuario != null) {
+            // NUEVO: Verificar si el usuario tiene dirección, y si no, intentar obtener la predeterminada
+            if ((usuario.getDireccion() == null || usuario.getDireccion().isEmpty()) && usuario.getDireccionPrincipal() != null) {
+                usuario.setDireccion(usuario.getDireccionPrincipal().getDireccionCompleta());
+                usuarioService.guardar(usuario);
+            }
+
             model.addAttribute("usuario", usuario);
             return "perfil/perfil_editar";
         } else {

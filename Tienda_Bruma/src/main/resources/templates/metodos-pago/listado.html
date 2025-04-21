@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+    >
+<head th:replace="~{layout/plantilla :: head}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - Bruma</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<!-- Incluir fragmento de header/navegación si existe -->
+<header th:replace="~{layout/plantilla :: header}"/>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">
+                Mis Métodos de Pago
+            </h2>
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show"
+                 role="alert">
+                <span th:text="${mensaje}">
+                </span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show"
+                 role="alert">
+                <span th:text="${error}">
+                </span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </button>
+            </div>
+            <!-- Menú de navegación de cuenta -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/perfil}">
+                                Mi Perfil
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/direcciones}">
+                                Mis Direcciones
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" th:href="@{/metodos-pago}">
+                                Métodos de Pago
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Botón para agregar método de pago -->
+            <div class="mb-4">
+                <a th:href="@{/metodos-pago/nuevo}" class="btn" style="background-color: #c49f79; color: black;">
+                    <i class="fas fa-plus-circle me-1">
+                    </i>
+                    Agregar Nuevo Método de Pago
+                </a>
+            </div>
+            <!-- Listado de métodos de pago -->
+            <div class="row row-cols-1 row-cols-md-2 g-4" th:if="${!#lists.isEmpty(metodosPago)}">
+                <div class="col" th:each="metodoPago : ${metodosPago}">
+                    <div class="card h-100" th:classappend="${metodoPago.esPrincipal} ? 'border-primary' : ''">
+                        <div class="card-header d-flex justify-content-between align-items-center"
+                             th:style="${metodoPago.esPrincipal} ? 'background-color: #e7f3ff;' : ''">
+                            <h5 class="card-title mb-0">
+                                <i th:class="${'fab fa-cc-' + #strings.toLowerCase(metodoPago.tipo)}">
+                                </i>
+                                <span th:text="${metodoPago.tipo}">
+                                    Tipo de Tarjeta
+                                </span>
+                                <span class="badge bg-primary ms-2" th:if="${metodoPago.esPrincipal}">
+                                    Predeterminado
+                                </span>
+                            </h5>
+                            <div>
+                                <!-- Botones de acción -->
+                                <a th:href="@{/metodos-pago/editar/{id}(id=${metodoPago.idMetodoPago})}"
+                                   class="btn btn-sm btn-outline-secondary me-1">
+                                    <i class="fas fa-edit">
+                                    </i>
+                                </a>
+                                <a th:href="@{/metodos-pago/eliminar/{id}(id=${metodoPago.idMetodoPago})}"
+                                   class="btn btn-sm btn-outline-danger me-1" onclick="return confirm('¿Está seguro de que desea eliminar este método de pago?')">
+                                    <i class="fas fa-trash">
+                                    </i>
+                                </a>
+                                <a th:if="${!metodoPago.esPrincipal}" th:href="@{/metodos-pago/predeterminado/{id}(id=${metodoPago.idMetodoPago})}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-star">
+                                    </i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <strong>
+                                    Titular:
+                                </strong>
+                                <span th:text="${metodoPago.nombreTitular}">
+                                    Nombre del titular
+                                </span>
+                                <br>
+                                    <strong>
+                                        Número:
+                                    </strong>
+                                    <span th:text="${metodoPago.numeroTarjetaEnmascarado}">
+                                        **** **** **** 1234
+                                    </span>
+                                    <br>
+                                        <strong>
+                                            Expiración:
+                                        </strong>
+                                        <span th:text="${metodoPago.expiracionFormateada}">
+                                            MM/AA
+                                        </span>
+                                        </p>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        <!-- Mensaje si no hay métodos de pago -->
+                                        <div class="alert alert-info" th:if="${#lists.isEmpty(metodosPago)}">
+                                            <p>
+                                                No tiene métodos de pago guardados. Agregue un nuevo método de pago para
+                                                facilitar sus compras.
+                                            </p>
+                                        </div>
+                                        </div>
+                                        </div>
+                                        </div>
+
+
+<!-- Footer Section -->
+<footer th:replace="~{layout/plantilla :: footer}"/>
+
+</body>
+</html>

@@ -20,105 +20,129 @@
 <header th:replace="~{layout/plantilla :: header}"/>
 
 <div class="container mt-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="mb-4">Editar Mi Perfil</h2>
-                    
-                    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <span th:text="${error}"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-body">
-                            <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}" />
-                                <input type="hidden" name="username" th:value="${usuario.username}" />
-                                <input type="hidden" name="activo" th:value="${usuario.activo}" />
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mb-4">Mi Cuenta</h2>
+            
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <!-- Menú de navegación de cuenta -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" th:href="@{/perfil}">Mi Perfil</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/direcciones}">Mis Direcciones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/metodos_pago}">Métodos de Pago</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" style="background-color: #c49f79; color: black;">
+                    <h4 class="m-0">Editar Mi Perfil</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/perfil/guardar}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}" />
+                        <input type="hidden" name="username" th:value="${usuario.username}" />
+                        <input type="hidden" name="activo" th:value="${usuario.activo}" />
+                        
+                        <div class="row">
+                            <div class="col-md-3 text-center mb-4">
+                                <img th:if="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
+                                     th:src="${usuario.rutaImagen}" 
+                                     alt="Foto de perfil" 
+                                     class="img-fluid rounded-circle mb-3" 
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                                <img th:unless="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
+                                     th:src="@{/images/default-profile.png}" 
+                                     alt="Foto de perfil por defecto" 
+                                     class="img-fluid rounded-circle mb-3" 
+                                     style="width: 150px; height: 150px; object-fit: cover;">
                                 
-                                <div class="row">
-                                    <div class="col-md-3 text-center mb-4">
-                                        <img th:if="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
-                                             th:src="${usuario.rutaImagen}" 
-                                             alt="Foto de perfil" 
-                                             class="img-fluid rounded-circle mb-3" 
-                                             style="width: 150px; height: 150px; object-fit: cover;">
-                                        <img th:unless="${usuario.rutaImagen != null and !usuario.rutaImagen.isEmpty()}" 
-                                             th:src="@{/images/default-profile.png}" 
-                                             alt="Foto de perfil por defecto" 
-                                             class="img-fluid rounded-circle mb-3" 
-                                             style="width: 150px; height: 150px; object-fit: cover;">
-                                        
-                                        <div class="mb-3">
-                                            <label for="imagenFile" class="form-label">Cambiar foto de perfil</label>
-                                            <input class="form-control" type="file" id="imagenFile" name="imagenFile" accept="image/*">
-                                        </div>
+                                <div class="mb-3">
+                                    <label for="imagenFile" class="form-label">Cambiar foto de perfil</label>
+                                    <input class="form-control" type="file" id="imagenFile" name="imagenFile" accept="image/*">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-9">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="nombre" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" th:value="${usuario.nombre}" required>
                                     </div>
-                                    
-                                    <div class="col-md-9">
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="nombre" class="form-label">Nombre</label>
-                                                <input type="text" class="form-control" id="nombre" name="nombre" th:value="${usuario.nombre}" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="apellidos" class="form-label">Apellidos</label>
-                                                <input type="text" class="form-control" id="apellidos" name="apellidos" th:value="${usuario.apellidos}" required>
-                                            </div>
+                                    <div class="col-md-6">
+                                        <label for="apellidos" class="form-label">Apellidos</label>
+                                        <input type="text" class="form-control" id="apellidos" name="apellidos" th:value="${usuario.apellidos}" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="correo" class="form-label">Correo electrónico</label>
+                                        <input type="email" class="form-control" id="correo" name="correo" th:value="${usuario.correo}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="telefono" class="form-label">Teléfono</label>
+                                        <input type="text" class="form-control" id="telefono" name="telefono" th:value="${usuario.telefono}">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="direccion" class="form-label">Dirección</label>
+                                    <textarea class="form-control" id="direccion" name="direccion" rows="3" th:text="${usuario.direccion}"></textarea>
+                                    <small class="form-text text-muted">
+                                        Esta es tu dirección principal. Para gestionar múltiples direcciones, visita la sección 
+                                        <a th:href="@{/direcciones}" class="text-decoration-none">Mis Direcciones</a>.
+                                    </small>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="cambiarPassword" name="cambiarPassword">
+                                        <label class="form-check-label" for="cambiarPassword">
+                                            Cambiar contraseña
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div id="passwordFields" style="display: none;">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="nuevaPassword" class="form-label">Nueva contraseña</label>
+                                            <input type="password" class="form-control" id="nuevaPassword" name="nuevaPassword">
                                         </div>
-                                        
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="correo" class="form-label">Correo electrónico</label>
-                                                <input type="email" class="form-control" id="correo" name="correo" th:value="${usuario.correo}">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="telefono" class="form-label">Teléfono</label>
-                                                <input type="text" class="form-control" id="telefono" name="telefono" th:value="${usuario.telefono}">
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mb-3">
-                                            <label for="direccion" class="form-label">Dirección</label>
-                                            <textarea class="form-control" id="direccion" name="direccion" rows="3" th:text="${usuario.direccion}"></textarea>
-                                        </div>
-                                        
-                                        <hr class="my-4">
-                                        
-                                        <div class="mb-3">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="cambiarPassword" name="cambiarPassword">
-                                                <label class="form-check-label" for="cambiarPassword">
-                                                    Cambiar contraseña
-                                                </label>
-                                            </div>
-                                        </div>
-                                        
-                                        <div id="passwordFields" style="display: none;">
-                                            <div class="row mb-3">
-                                                <div class="col-md-6">
-                                                    <label for="nuevaPassword" class="form-label">Nueva contraseña</label>
-                                                    <input type="password" class="form-control" id="nuevaPassword" name="nuevaPassword">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label for="confirmarPassword" class="form-label">Confirmar contraseña</label>
-                                                    <input type="password" class="form-control" id="confirmarPassword" name="confirmarPassword">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="d-flex justify-content-end mt-4">
-                                            <a th:href="@{/perfil}" class="btn btn-secondary me-2">Cancelar</a>
-                                            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                        <div class="col-md-6">
+                                            <label for="confirmarPassword" class="form-label">Confirmar contraseña</label>
+                                            <input type="password" class="form-control" id="confirmarPassword" name="confirmarPassword">
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                                
+                                <div class="d-flex justify-content-end mt-4">
+                                    <a th:href="@{/perfil}" class="btn btn-secondary me-2">Cancelar</a>
+                                    <button type="submit" class="btn" style="background-color: #c49f79; color: black;">Guardar cambios</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
 <!-- Footer Section -->
 <footer th:replace="~{layout/plantilla :: footer}"/>

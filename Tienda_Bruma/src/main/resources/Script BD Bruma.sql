@@ -59,6 +59,52 @@ CREATE TABLE usuario (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 
+-- Tabla para almacenar múltiples direcciones de usuarios
+CREATE TABLE direccion (
+  id_direccion INT NOT NULL AUTO_INCREMENT,
+  id_usuario INT NOT NULL,
+  nombre VARCHAR(100) NOT NULL, -- Etiqueta para la dirección (ej: "Casa", "Trabajo")
+  calle VARCHAR(200) NOT NULL,
+  ciudad VARCHAR(100) NOT NULL,
+  provincia VARCHAR(100) NOT NULL,
+  codigo_postal VARCHAR(20) NOT NULL,
+  pais VARCHAR(100) DEFAULT 'Costa Rica',
+  telefono VARCHAR(20),
+  es_principal BOOLEAN DEFAULT FALSE, -- Para marcar la dirección predeterminada
+  activo BOOLEAN DEFAULT TRUE,
+  PRIMARY KEY (id_direccion),
+  FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+
+-- Tabla para almacenar métodos de pago (tarjetas)
+CREATE TABLE metodo_pago (
+  id_metodo_pago INT NOT NULL AUTO_INCREMENT,
+  id_usuario INT NOT NULL,
+  tipo VARCHAR(50) NOT NULL, -- (ej: "VISA", "MasterCard", "AMEX")
+  nombre_titular VARCHAR(100) NOT NULL,
+  numero_tarjeta VARCHAR(100) NOT NULL, -- Se almacenará encriptado en un caso real
+  mes_expiracion INT NOT NULL,
+  anio_expiracion INT NOT NULL,
+  es_principal BOOLEAN DEFAULT FALSE, -- Para marcar el método predeterminado
+  activo BOOLEAN DEFAULT TRUE,
+  PRIMARY KEY (id_metodo_pago),
+  FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+
+-- Insertar algunas direcciones de ejemplo para los usuarios existentes
+INSERT INTO direccion (id_usuario, nombre, calle, ciudad, provincia, codigo_postal, pais, telefono, es_principal) VALUES
+(1, 'Casa', 'Calle 123', 'San José', 'San José', '10101', 'Costa Rica', '8765-4321', TRUE),
+(1, 'Trabajo', 'Avenida Central', 'San José', 'San José', '10102', 'Costa Rica', '8765-4322', FALSE),
+(2, 'Casa', 'Calle Principal 45', 'Heredia', 'Heredia', '20201', 'Costa Rica', '8123-9876', TRUE),
+(3, 'Casa', 'Avenida 2', 'Cartago', 'Cartago', '30301', 'Costa Rica', '7890-1234', TRUE);
+
+-- Insertar algunos métodos de pago de ejemplo para los usuarios existentes
+INSERT INTO metodo_pago (id_usuario, tipo, nombre_titular, numero_tarjeta, mes_expiracion, anio_expiracion, es_principal) VALUES
+(1, 'VISA', 'María López Mora', '4111XXXXXXXXXXXX', 5, 2026, TRUE),
+(1, 'MasterCard', 'María López Mora', '5500XXXXXXXXXXXX', 8, 2027, FALSE),
+(2, 'VISA', 'Carlos Ramírez Torres', '4222XXXXXXXXXXXX', 3, 2025, TRUE),
+(3, 'AMEX', 'Laura Vega Castro', '3700XXXXXXXXXXXX', 12, 2026, TRUE);
+
 CREATE TABLE factura (
   id_factura INT NOT NULL AUTO_INCREMENT,
   id_usuario INT NOT NULL,
@@ -229,3 +275,16 @@ INSERT INTO constante (atributo, valor) VALUES
 ('paypal.mode', 'sandbox'),
 ('urlPaypalCancel', 'http://localhost/payment/cancel'),
 ('urlPaypalSuccess', 'http://localhost/payment/success');
+
+-- Modificamos la tabla factura para incluir referencias a dirección y método de pago
+ALTER TABLE factura 
+ADD COLUMN id_direccion INT AFTER id_usuario,
+ADD COLUMN id_metodo_pago INT AFTER id_direccion,
+ADD FOREIGN KEY (id_direccion) REFERENCES direccion(id_direccion),
+ADD FOREIGN KEY (id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago);
+
+-- Actualizamos las facturas existentes con los nuevos campos
+UPDATE factura f
+JOIN direccion d ON f.id_usuario = d.id_usuario AND d.es_principal = TRUE
+JOIN metodo_pago m ON f.id_usuario = m.id_usuario AND m.es_principal = TRUE
+SET f.id_direccion = d.id_direccion, f.id_metodo_pago = m.id_metodo_pago;

@@ -31,13 +31,19 @@ public class Usuario implements Serializable {
     private String apellidos;
     private String correo;
     private String telefono;
-    private String direccion;
+    private String direccion; //Ahora usaremos la tabla de direcciones
     @Column(name = "ruta_imagen", length = 1024)
     private String rutaImagen;
     private boolean activo;
     
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Rol> roles;
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Direccion> direcciones;
+    
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MetodoPago> metodosPago;
 
     public Integer getIdUsuario() {
         return idUsuario;
@@ -125,5 +131,57 @@ public class Usuario implements Serializable {
 
     public void setRoles(List<Rol> roles) {
         this.roles = roles;
+    }
+    
+    public List<Direccion> getDirecciones() {
+        return direcciones;
+    }
+
+    public void setDirecciones(List<Direccion> direcciones) {
+        this.direcciones = direcciones;
+    }
+
+    public List<MetodoPago> getMetodosPago() {
+        return metodosPago;
+    }
+
+    public void setMetodosPago(List<MetodoPago> metodosPago) {
+        this.metodosPago = metodosPago;
+    }
+    
+    // Método para obtener la dirección principal
+    public Direccion getDireccionPrincipal() {
+        if (direcciones != null && !direcciones.isEmpty()) {
+            for (Direccion direccion : direcciones) {
+                if (direccion.isEsPrincipal() && direccion.isActivo()) {
+                    return direccion;
+                }
+            }
+            // Si no hay dirección principal, devolver la primera activa
+            for (Direccion direccion : direcciones) {
+                if (direccion.isActivo()) {
+                    return direccion;
+                }
+            }
+        }
+        return null;
+    }
+    
+    // Método para obtener el método de pago principal
+    public MetodoPago getMetodoPagoPrincipal() {
+        if (metodosPago != null && !metodosPago.isEmpty()) {
+            for (MetodoPago metodoPago : metodosPago) {
+                if (metodoPago.isEsPrincipal() && metodoPago.isActivo()) {
+                    return metodoPago;
+                }
+            }
+            // Si no hay método principal, devolver el primero activo
+            for (MetodoPago metodoPago : metodosPago) {
+                if (metodoPago.isActivo()) {
+                    return metodoPago;
+                }
+            }
+        }
+        return null;
     }
 }
