@@ -55,7 +55,7 @@ public class DireccionService {
     }
     
     
-    //Elimina una dirección (desactivándola, no eliminándola físicamente)
+    //Elimina una dirección 
     
     @Transactional
     public void eliminar(Direccion direccion) {

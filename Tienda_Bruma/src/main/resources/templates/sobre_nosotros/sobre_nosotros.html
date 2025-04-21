@@ -91,6 +91,93 @@
     </div>
 </section>
 
+<!-- Testimonios/Reseñas Section -->
+<section class="reviews-section py-5 bg-light my-5">
+    <div class="container">
+        <h2 class="text-center mb-4">Lo que dicen nuestros clientes</h2>
+        
+        <!-- Mostrar mensaje si no hay reseñas -->
+        <div th:if="${#lists.isEmpty(reviews)}" class="text-center">
+            <p>No hay reseñas disponibles en este momento.</p>
+        </div>
+        
+        <!-- Carrusel de reseñas -->
+        <div th:if="${not #lists.isEmpty(reviews)}" id="reviewCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- Primera reseña activa por defecto -->
+                <div th:each="review, status : ${reviews}" 
+                     th:class="${status.first} ? 'carousel-item active' : 'carousel-item'">
+                    <div class="card mx-auto shadow-sm" style="max-width: 600px;">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <div class="mb-3">
+                                    <!-- Estrellas rellenas según la calificación (de 1 a 5) -->
+                                    <span th:each="i : ${#numbers.sequence(1, review.rating)}">
+                                        <i class="fas fa-star text-warning"></i>
+                                    </span>
+                                    <!-- Estrellas vacías para completar 5 en total -->
+                                    <span th:if="${review.rating < 5}" th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">
+                                        <i class="far fa-star text-warning"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="card-text mb-4 fst-italic" th:text="${review.comentario}">Comentario de la reseña</p>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <div th:if="${review.usuario.rutaImagen != null and review.usuario.rutaImagen != ''}" class="me-3">
+                                    <img th:src="${review.usuario.rutaImagen}" class="rounded-circle" width="50" height="50" alt="Foto de perfil"/>
+                                </div>
+                                <div>
+                                    <h5 class="card-title mb-0" th:text="${review.usuario.nombre + ' ' + review.usuario.apellidos}">Nombre del cliente</h5>
+                                    <p class="text-muted small" th:text="${#temporals.format(review.fechaCreacion, 'dd/MM/yyyy')}">Fecha</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Controles del carousel, solo mostrar si hay más de una reseña -->
+            <div th:if="${reviews.size() > 1}">
+                <button class="carousel-control-prev" type="button" 
+                        data-bs-target="#reviewCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" 
+                        data-bs-target="#reviewCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+                
+                <!-- Indicadores -->
+                <div class="carousel-indicators position-static mt-3">
+                    <button th:each="review, status : ${reviews}" 
+                            type="button" 
+                            data-bs-target="#reviewCarousel" 
+                            th:data-bs-slide-to="${status.index}" 
+                            th:class="${status.first} ? 'active' : ''"
+                            aria-current="true" 
+                            th:aria-label="${'Reseña ' + status.count}"></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enlace para dejar una reseña, solo para usuarios autenticados -->
+        <div class="text-center mt-4">
+            <a sec:authorize="isAuthenticated()" th:href="@{/review/form}" class="btn btn-outline-dark">
+                Compartir tu experiencia
+            </a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/review/listado}" class="btn btn-outline-dark">
+                Mirar más experiencias
+            </a>
+            <p sec:authorize="!isAuthenticated()" class="text-muted">
+                <a th:href="@{/login}">Inicia sesión</a> para compartir tu experiencia
+            </p>
+        </div>
+    </div>
+</section>
+
+
 <!-- Call to Action -->
 <section class="mt-4 py-5 bg-light">
     <div class="container text-center">

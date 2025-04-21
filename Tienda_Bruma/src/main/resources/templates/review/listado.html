@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <head th:replace="~{layout/plantilla :: head}"></head>
+    
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        
+         <div class="container mt-4 mb-5">
+            <div class="card border-0 shadow">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #c49f79; color: black;">
+                    <h4 class="m-0">Reseñas de Clientes</h4>
+                    <a th:href="@{/review/nuevo}" class="btn btn-sm btn-dark">
+                        <i class="fas fa-plus-circle"></i> Nueva Reseña
+                    </a>
+                </div>
+                <div class="card-body">
+                    <!-- Alerta de mensajes -->
+                    <div class="alert alert-success alert-dismissible fade show" th:if="${msg != null}" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <span th:text="${msg}"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <!-- Si no hay reseñas -->
+                    <div class="text-center py-5" th:if="${#lists.isEmpty(reviews)}">
+                        <i class="fas fa-comment-slash fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay reseñas disponibles</h5>
+                        <p class="mb-3">Aún no se han registrado reseñas de clientes.</p>
+                        <a th:href="@{/review/nuevo}" class="btn" style="background-color: #c49f79; color: black;">
+                            Escribir la primera reseña
+                        </a>
+                    </div>
+                    
+                    <!-- Listado de reseñas -->
+                    <div th:if="${not #lists.isEmpty(reviews)}">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Calificación</th>
+                                        <th>Comentario</th>
+                                        <th>Fecha</th>
+                                        <th sec:authorize="hasRole('ADMIN')">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="review : ${reviews}">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img th:if="${review.usuario.rutaImagen != null && review.usuario.rutaImagen != ''}" 
+                                                     th:src="${review.usuario.rutaImagen}" 
+                                                     class="rounded-circle me-2" 
+                                                     width="40" height="40" alt="Foto de perfil">
+                                                <span th:text="${review.usuario.nombre + ' ' + review.usuario.apellidos}"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!-- Estrellas de calificación -->
+                                            <div>
+                                                <span th:each="i : ${#numbers.sequence(1, review.rating)}">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                </span>
+                                                <span th:if="${review.rating < 5}" th:each="i : ${#numbers.sequence(1, 5 - review.rating)}">
+                                                    <i class="far fa-star text-warning"></i>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!-- Acortar comentario largo y mostrar completo en tooltip -->
+                                            <span th:if="${#strings.length(review.comentario) <= 100}" th:text="${review.comentario}"></span>
+                                            <span th:if="${#strings.length(review.comentario) > 100}" 
+                                                  th:text="${#strings.substring(review.comentario, 0, 100) + '...'}"
+                                                  data-bs-toggle="tooltip" 
+                                                  data-bs-placement="bottom" 
+                                                  th:title="${review.comentario}">
+                                            </span>
+                                        </td>
+                                        <td th:text="${#temporals.format(review.fechaCreacion, 'dd/MM/yyyy')}"></td>
+                                        <td sec:authorize="hasRole('ADMIN')">
+                                            <div class="d-flex">
+                                                <a th:href="@{/review/editar/} + ${review.idReview}" class="btn btn-sm btn-outline-primary me-2">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a th:href="@{/review/eliminar/} + ${review.idReview}" class="btn btn-sm btn-outline-danger"
+                                                   onclick="return confirm('¿Estás seguro de que deseas eliminar esta reseña?');">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+        
+        <!-- Inicializar tooltips -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                    return new bootstrap.Tooltip(tooltipTriggerEl);
+                });
+            });
+        </script>
+        
+    </body>
+</html>

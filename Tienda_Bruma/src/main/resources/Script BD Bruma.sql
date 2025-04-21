@@ -114,6 +114,25 @@ CREATE TABLE factura (
   PRIMARY KEY (id_factura),
   FOREIGN KEY fk_factura_usuario (id_usuario) REFERENCES usuario(id_usuario)  
 )
+
+-- Crear la tabla review para las resenas que se van a mostrar en la pagina
+CREATE TABLE review (
+  id_review INT NOT NULL AUTO_INCREMENT,
+  id_usuario INT NOT NULL,
+  rating INT NOT NULL, -- Valor de 1 a 5 estrellas
+  comentario VARCHAR(500) NOT NULL,
+  fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+  activo BOOLEAN DEFAULT TRUE,
+  PRIMARY KEY (id_review),
+  FOREIGN KEY fk_review_usuario (id_usuario) REFERENCES usuario(id_usuario)
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
+
+-- Reviews de prubeas / mostrar algunas resenas ya almacenadas
+INSERT INTO review (id_usuario, rating, comentario, fecha_creacion, activo) VALUES 
+(1, 5, 'Excelente servicio y productos de altísima calidad. Compré un anillo y quedé encantada con el resultado.', '2024-03-15 10:30:00', true),
+(2, 4, 'Muy buena atención al cliente. Los productos son hermosos aunque un poco caros.', '2024-03-20 15:45:00', true),
+(3, 5, 'Las joyas son preciosas y únicas. Definitivamente volveré a comprar.', '2024-04-05 12:20:00', true);
+
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
 

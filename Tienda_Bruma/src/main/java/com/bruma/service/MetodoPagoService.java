@@ -55,7 +55,7 @@ public class MetodoPagoService {
     }
     
    
-    //Elimina un método de pago (desactivándolo, no eliminándolo físicamente)
+    //Elimina un método de pago
     
     @Transactional
     public void eliminar(MetodoPago metodoPago) {

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <head th:replace="~{layout/plantilla :: head}"></head>
+    
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        
+         <div class="container mt-4 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow">
+                        <div class="card-header" style="background-color: #c49f79; color: black;">
+                            <h4 th:text="${review.idReview != null ? 'Editar Reseña' : 'Nueva Reseña'}" class="m-0">Compartir tu Experiencia</h4>
+                        </div>
+                        <div class="card-body">
+                            <form th:action="@{/review/guardar}" method="POST" th:object="${review}">
+                                <!-- Campo oculto para el ID (en caso de edición) -->
+                                <input type="hidden" th:field="*{idReview}">
+                                
+                                <!-- Calificación (estrellas) -->
+                                <div class="mb-4">
+                                    <label class="form-label">Calificación</label>
+                                    <div class="rating-input">
+                                        <div class="d-flex flex-row align-items-center">
+                                            <!-- Radio buttons para las estrellas -->
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input star-radio" type="radio" name="rating" id="rating1" value="1" th:field="*{rating}" th:checked="${review.rating == 1}">
+                                                <label class="form-check-label" for="rating1"><i class="far fa-star"></i></label>
+                                            </div>
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input star-radio" type="radio" name="rating" id="rating2" value="2" th:field="*{rating}" th:checked="${review.rating == 2}">
+                                                <label class="form-check-label" for="rating2"><i class="far fa-star"></i></label>
+                                            </div>
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input star-radio" type="radio" name="rating" id="rating3" value="3" th:field="*{rating}" th:checked="${review.rating == 3}">
+                                                <label class="form-check-label" for="rating3"><i class="far fa-star"></i></label>
+                                            </div>
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input star-radio" type="radio" name="rating" id="rating4" value="4" th:field="*{rating}" th:checked="${review.rating == 4}">
+                                                <label class="form-check-label" for="rating4"><i class="far fa-star"></i></label>
+                                            </div>
+                                            <div class="form-check form-check-inline mb-0">
+                                                <input class="form-check-input star-radio" type="radio" name="rating" id="rating5" value="5" th:field="*{rating}" th:checked="${review.rating == 5}">
+                                                <label class="form-check-label" for="rating5"><i class="far fa-star"></i></label>
+                                            </div>
+                                            <!-- Visualización de estrellas seleccionadas -->
+                                            <div class="ms-3">
+                                                <span id="rating-display">0 de 5 estrellas</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Comentario -->
+                                <div class="mb-4">
+                                    <label for="comentario" class="form-label">Tu experiencia con nuestros productos</label>
+                                    <textarea th:field="*{comentario}" class="form-control" id="comentario" rows="5" 
+                                              placeholder="Comparte tu opinión sobre nuestros productos y servicios..." required maxlength="500"></textarea>
+                                    <div class="form-text">
+                                        <span id="contador">0</span>/500 caracteres
+                                    </div>
+                                </div>
+                                
+                                <!-- Botones de acción -->
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a th:href="@{/sobre_nosotros}" class="btn btn-secondary me-md-2">Cancelar</a>
+                                    <button type="submit" class="btn" style="background-color: #c49f79; color: black;">Publicar Reseña</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+        
+        <!-- Script para manejar la interacción de las estrellas -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Contador de caracteres para el textarea
+                const comentario = document.getElementById('comentario');
+                const contador = document.getElementById('contador');
+                
+                comentario.addEventListener('input', function() {
+                    contador.textContent = this.value.length;
+                });
+                
+                // Inicializar contador
+                contador.textContent = comentario.value.length;
+                
+                // Manejo de estrellas
+                const starLabels = document.querySelectorAll('.star-radio + label');
+                const starInputs = document.querySelectorAll('.star-radio');
+                const ratingDisplay = document.getElementById('rating-display');
+                
+                // Verificar si hay una calificación existente
+                updateStarDisplay();
+                
+                // Agregar eventos a las estrellas
+                starInputs.forEach(input => {
+                    input.addEventListener('change', function() {
+                        updateStarDisplay();
+                    });
+                });
+                
+                function updateStarDisplay() {
+                    // Encontrar el valor seleccionado
+                    let selectedValue = 0;
+                    for (let i = 0; i < starInputs.length; i++) {
+                        if (starInputs[i].checked) {
+                            selectedValue = parseInt(starInputs[i].value);
+                            break;
+                        }
+                    }
+                    
+                    // Actualizar visualización
+                    ratingDisplay.textContent = selectedValue + ' de 5 estrellas';
+                    
+                    // Actualizar estrellas
+                    for (let i = 0; i < starLabels.length; i++) {
+                        const star = starLabels[i].querySelector('i');
+                        if (i < selectedValue) {
+                            star.className = 'fas fa-star text-warning';
+                        } else {
+                            star.className = 'far fa-star';
+                        }
+                    }
+                }
+            });
+        </script>
+        
+    </body>
+</html>
