@@ -115,6 +115,16 @@ CREATE TABLE factura (
   FOREIGN KEY fk_factura_usuario (id_usuario) REFERENCES usuario(id_usuario)  
 )
 
+-- Modificacion de la tabla factura para que acepte los nuevos estados de pedido y acepte fechas importantes (confirmacion, envio, estimada, etc)
+ALTER TABLE factura 
+MODIFY estado INT COMMENT '1=En Proceso, 2=Confirmado, 3=En Preparación, 4=En Camino, 5=Entregado, 6=Anulado';
+
+ALTER TABLE factura 
+ADD fecha_confirmacion DATETIME NULL AFTER fecha,
+ADD fecha_envio DATETIME NULL AFTER fecha_confirmacion,
+ADD fecha_entrega_estimada DATETIME NULL AFTER fecha_envio,
+ADD fecha_entrega_real DATETIME NULL AFTER fecha_entrega_estimada;
+
 -- Crear la tabla review para las resenas que se van a mostrar en la pagina
 CREATE TABLE review (
   id_review INT NOT NULL AUTO_INCREMENT,
@@ -148,6 +158,17 @@ CREATE TABLE venta (
 )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;
+
+-- Tabla para mostrar los estados de los pedidos (En proceso, En camino, finalizada)
+CREATE TABLE seguimiento_pedido (
+  id_seguimiento INT NOT NULL AUTO_INCREMENT,
+  id_factura INT NOT NULL,
+  estado VARCHAR(50) NOT NULL, -- 'En Proceso', 'En Camino', 'Finalizada', etc.
+  fecha_cambio DATETIME DEFAULT CURRENT_TIMESTAMP,
+  comentario VARCHAR(255),
+  PRIMARY KEY (id_seguimiento),
+  FOREIGN KEY (id_factura) REFERENCES factura(id_factura)
+) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb4;
 
 /*Se insertan 3 registros en la tabla usuario como ejemplo */
 INSERT INTO usuario (id_usuario, username, password, nombre, apellidos, correo, telefono, direccion, ruta_imagen, activo) VALUES 
@@ -209,6 +230,21 @@ INSERT INTO venta (id_venta, id_factura, id_producto, precio, cantidad) values
 (16, 6, 2, 320000, 2),
 (17, 6, 15, 350000, 1),
 (18, 6, 14, 180000, 1);
+
+-- Actualizar facturas existentes con los nuevos campos (dirección y método de pago)
+UPDATE factura f
+JOIN direccion d ON f.id_usuario = d.id_usuario AND d.es_principal = TRUE
+JOIN metodo_pago m ON f.id_usuario = m.id_usuario AND m.es_principal = TRUE
+SET f.id_direccion = d.id_direccion, f.id_metodo_pago = m.id_metodo_pago
+WHERE f.id_factura BETWEEN 1 AND 6;
+
+-- Actualizar fechas según los estados
+UPDATE factura 
+SET fecha_confirmacion = fecha,
+    fecha_envio = DATE_ADD(fecha, INTERVAL 2 DAY),
+    fecha_entrega_estimada = DATE_ADD(fecha, INTERVAL 5 DAY),
+    fecha_entrega_real = CASE WHEN estado = 2 THEN DATE_ADD(fecha, INTERVAL 4 DAY) ELSE NULL END
+WHERE id_factura BETWEEN 1 AND 6;
 
 CREATE TABLE role (  
   rol VARCHAR(20),

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <head th:replace="~{layout/plantilla :: head}"></head>
+    
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        
+        <div class="container py-5">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <h1 class="mb-3">Checkout</h1>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar" role="progressbar" style="width: 66%; background-color: #c49f79;" 
+                             aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <div class="d-flex justify-content-between mt-2">
+                        <span class="text-muted">1. Dirección</span>
+                        <span class="fw-bold" style="color: #c49f79;">2. Método de pago</span>
+                        <span class="text-muted">3. Confirmar</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${mensaje != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <!-- Contenido principal -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Selecciona un método de pago</h5>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${metodosPago.isEmpty()}" class="alert alert-warning" role="alert">
+                                No tienes métodos de pago guardados. Por favor, añade un método de pago.
+                            </div>
+                            
+                            <form th:if="${!metodosPago.isEmpty()}" th:action="@{/checkout/seleccionar-metodo-pago}" method="post">
+                                <div class="row">
+                                    <div th:each="metodoPago : ${metodosPago}" class="col-md-6 mb-3">
+                                        <div class="card h-100" th:classappend="${metodoPago.idMetodoPago == metodoPagoSeleccionadoId ? 'border-primary' : ''}">
+                                            <div class="card-body">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="metodoPagoId" 
+                                                           th:id="${'metodo-' + metodoPago.idMetodoPago}" 
+                                                           th:value="${metodoPago.idMetodoPago}" 
+                                                           th:checked="${metodoPago.idMetodoPago == metodoPagoSeleccionadoId}">
+                                                    <label class="form-check-label" 
+                                                           th:for="${'metodo-' + metodoPago.idMetodoPago}">
+                                                        <span th:if="${metodoPago.tipo == 'VISA'}" class="fab fa-cc-visa fa-lg me-2"></span>
+                                                        <span th:if="${metodoPago.tipo == 'MasterCard'}" class="fab fa-cc-mastercard fa-lg me-2"></span>
+                                                        <span th:if="${metodoPago.tipo == 'AMEX'}" class="fab fa-cc-amex fa-lg me-2"></span>
+                                                        <strong th:text="${metodoPago.tipo}"></strong>
+                                                        <span th:if="${metodoPago.esPrincipal}" class="badge ms-2" 
+                                                              style="background-color: #c49f79;">Predeterminado</span>
+                                                    </label>
+                                                </div>
+                                                <hr>
+                                                <div class="mb-2">
+                                                    <div th:text="${metodoPago.nombreTitular}"></div>
+                                                    <div class="text-monospace" th:text="${metodoPago.getNumeroTarjetaEnmascarado()}"></div>
+                                                </div>
+                                                <div>
+                                                    <small class="text-muted">
+                                                        Expira: <span th:text="${metodoPago.getExpiracionFormateada()}"></span>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Información de la dirección seleccionada -->
+                                <div class="card mt-4 bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title">Dirección de envío seleccionada:</h6>
+                                        <address class="mb-0">
+                                            <strong th:text="${direccionSeleccionada.nombre}"></strong><br>
+                                            <span th:text="${direccionSeleccionada.calle}"></span><br>
+                                            <span th:text="${direccionSeleccionada.ciudad + ', ' + direccionSeleccionada.provincia}"></span><br>
+                                            <span th:text="${direccionSeleccionada.codigoPostal}"></span><br>
+                                            <span th:text="${direccionSeleccionada.pais}"></span><br>
+                                            <i class="fas fa-phone-alt mt-2 me-1"></i>
+                                            <span th:text="${direccionSeleccionada.telefono}"></span>
+                                        </address>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between mt-4">
+                                    <a th:href="@{/metodos-pago/nuevo}" class="btn btn-outline-primary">
+                                        <i class="fas fa-plus me-2"></i>Nuevo método de pago
+                                    </a>
+                                    <div>
+                                        <a th:href="@{/checkout/direcciones}" class="btn me-2" style="background-color: #f5f1ec; color: black;">
+                                            <i class="fas fa-arrow-left me-2"></i>Volver
+                                        </a>
+                                        <button type="submit" class="btn" style="background-color: #c49f79; color: black;">
+                                            Continuar<i class="fas fa-arrow-right ms-2"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <!-- Resumen del carrito -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Resumen del pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            <div th:each="item : ${carrito.items}" class="d-flex justify-content-between mb-2">
+                                <div>
+                                    <span th:text="${item.cantidad + ' x ' + item.producto.nombre}"></span>
+                                    <small class="d-block text-muted" th:text="${item.producto.material}"></small>
+                                </div>
+                                <span th:text="${'$' + #numbers.formatDecimal(item.subtotal, 0, 'COMMA', 2, 'POINT')}"></span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <span th:text="${'$' + #numbers.formatDecimal(carrito.total, 0, 'COMMA', 2, 'POINT')}"></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Envío:</span>
+                                <span>$0.00</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <strong>Total:</strong>
+                                <strong th:text="${'$' + #numbers.formatDecimal(carrito.total, 0, 'COMMA', 2, 'POINT')}"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+    </body>
+</html>

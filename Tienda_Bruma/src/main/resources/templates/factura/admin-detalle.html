@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    
+    <head th:replace="~{layout/plantilla :: head}"></head>
+    
+    <body>
+        <header th:replace="~{layout/plantilla :: header}"></header>
+        
+        <div class="container py-5">
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="mb-0">Detalle del Pedido</h1>
+                        <div>
+                            <span class="badge fs-6" th:style="${factura.estado == 6 ? 'background-color: #dc3545;' : (factura.estado == 5 ? 'background-color: #198754;' : 'background-color: #c49f79;')}" 
+                                  th:text="${factura.estadoTexto}"></span>
+                        </div>
+                    </div>
+                    <p class="text-muted">
+                        Pedido #<span th:text="${factura.idFactura}"></span> • 
+                        <span th:text="${#dates.format(factura.fecha, 'dd/MM/yyyy')}"></span> •
+                        Cliente: <span th:text="${factura.usuario.nombre + ' ' + factura.usuario.apellidos}"></span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Mensajes de alerta -->
+            <div th:if="${mensaje != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div th:if="${error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Detalles del pedido -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Productos</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th class="text-center">Precio</th>
+                                            <th class="text-center">Cantidad</th>
+                                            <th class="text-end">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="item : ${items}">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <img th:if="${item.producto.rutaImagen != null}" 
+                                                         th:src="${item.producto.rutaImagen}" 
+                                                         class="img-fluid me-3" alt="Producto" 
+                                                         style="max-width: 50px; height: auto;">
+                                                        <div>
+                                                            <h6 class="mb-0" th:text="${item.producto.nombre}"></h6>
+                                                            <small class="text-muted" th:text="${item.producto.material}"></small>
+                                                        </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <span th:text="${'$' + #numbers.formatDecimal(item.precio, 0, 'COMMA', 2, 'POINT')}"></span>
+                                            </td>
+                                            <td class="text-center align-middle" th:text="${item.cantidad}"></td>
+                                            <td class="text-end align-middle">
+                                                <span th:text="${'$' + #numbers.formatDecimal(item.precio * item.cantidad, 0, 'COMMA', 2, 'POINT')}"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-end">Subtotal:</td>
+                                            <td class="text-end" th:text="${'$' + #numbers.formatDecimal(factura.total, 0, 'COMMA', 2, 'POINT')}"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-end">Envío:</td>
+                                            <td class="text-end">$0.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                            <td class="text-end"><strong th:text="${'$' + #numbers.formatDecimal(factura.total, 0, 'COMMA', 2, 'POINT')}"></strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información de envío y pago -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-white">
+                                    <h5 class="mb-0">Dirección de envío</h5>
+                                </div>
+                                <div class="card-body">
+                                    <address class="mb-0">
+                                        <strong th:text="${factura.direccion.nombre}"></strong><br>
+                                            <span th:text="${factura.direccion.calle}"></span><br>
+                                                <span th:text="${factura.direccion.ciudad + ', ' + factura.direccion.provincia}"></span><br>
+                                                    <span th:text="${factura.direccion.codigoPostal}"></span><br>
+                                                        <span th:text="${factura.direccion.pais}"></span><br>
+                                                            <i class="fas fa-phone-alt mt-2 me-1"></i>
+                                                            <span th:text="${factura.direccion.telefono}"></span>
+                                                            </address>
+                                                            </div>
+                                                            </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <div class="card mb-4">
+                                                                    <div class="card-header bg-white">
+                                                                        <h5 class="mb-0">Método de pago</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div>
+                                                                            <span th:if="${factura.metodoPago.tipo == 'VISA'}" class="fab fa-cc-visa fa-lg me-2"></span>
+                                                                            <span th:if="${factura.metodoPago.tipo == 'MasterCard'}" class="fab fa-cc-mastercard fa-lg me-2"></span>
+                                                                            <span th:if="${factura.metodoPago.tipo == 'AMEX'}" class="fab fa-cc-amex fa-lg me-2"></span>
+                                                                            <strong th:text="${factura.metodoPago.tipo}"></strong>
+                                                                        </div>
+                                                                        <div class="mt-2">
+                                                                            <div th:text="${factura.metodoPago.nombreTitular}"></div>
+                                                                            <div class="text-monospace" th:text="${factura.metodoPago.getNumeroTarjetaEnmascarado()}"></div>
+                                                                            <small class="text-muted">
+                                                                                Expira: <span th:text="${factura.metodoPago.getExpiracionFormateada()}"></span>
+                                                                            </small>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+
+                                                            <!-- Actualizar estado del pedido -->
+                                                            <div class="card mb-4">
+                                                                <div class="card-header bg-white">
+                                                                    <h5 class="mb-0">Actualizar estado del pedido</h5>
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <form th:action="@{/factura/actualizar-estado/{id}(id=${factura.idFactura})}" method="post">
+                                                                        <div class="mb-3">
+                                                                            <label for="nuevoEstado" class="form-label">Nuevo estado</label>
+                                                                            <select class="form-select" id="nuevoEstado" name="nuevoEstado" required onchange="mostrarCamposSegunEstado()">
+                                                                                <option value="1" th:selected="${factura.estado == 1}">En Proceso</option>
+                                                                                <option value="2" th:selected="${factura.estado == 2}">Confirmado</option>
+                                                                                <option value="3" th:selected="${factura.estado == 3}">En preparación</option>
+                                                                                <option value="4" th:selected="${factura.estado == 4}">En Camino</option>
+                                                                                <option value="5" th:selected="${factura.estado == 5}">Entregado</option>
+                                                                                <option value="6" th:selected="${factura.estado == 6}">Anulado</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label for="comentario" class="form-label">Comentario</label>
+                                                                            <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+                                                                        </div>
+                                                                        <div class="mb-3" id="campoFechaEnvio" style="display: none;">
+                                                                            <label for="fechaEnvio" class="form-label">Fecha de envío</label>
+                                                                            <input type="date" class="form-control" id="fechaEnvio" name="fechaEnvio">
+                                                                        </div>
+                                                                        <div class="mb-3" id="campoFechaEntrega" style="display: none;">
+                                                                            <label for="fechaEntrega" class="form-label">Fecha de entrega estimada</label>
+                                                                            <input type="date" class="form-control" id="fechaEntrega" name="fechaEntrega">
+                                                                        </div>
+                                                                        <div class="mb-3" id="campoNumeroSeguimiento" style="display: none;">
+                                                                            <label for="numeroSeguimiento" class="form-label">Número de seguimiento</label>
+                                                                            <input type="text" class="form-control" id="numeroSeguimiento" name="numeroSeguimiento">
+                                                                        </div>
+                                                                        <div class="mb-3" id="campoCancelacion" style="display: none;">
+                                                                            <label for="motivoCancelacion" class="form-label">Motivo de cancelación</label>
+                                                                            <textarea class="form-control" id="motivoCancelacion" name="motivoCancelacion" rows="3"></textarea>
+                                                                        </div>
+                                                                        <button type="submit" class="btn" style="background-color: #c49f79; color: black;">
+                                                                            <i class="fas fa-save me-2"></i>Actualizar estado
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+
+                                                            <!-- Columna lateral -->
+                                                            <div class="col-md-4">
+                                                                <!-- Información del cliente -->
+                                                                <div class="card shadow-sm mb-4">
+                                                                    <div class="card-header bg-white">
+                                                                        <h5 class="mb-0">Información del cliente</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="mb-3">
+                                                                            <div class="d-flex justify-content-between mb-1">
+                                                                                <span>Cliente:</span>
+                                                                                <span class="fw-bold" th:text="${factura.usuario.nombre + ' ' + factura.usuario.apellidos}"></span>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between mb-1">
+                                                                                <span>Email:</span>
+                                                                                <span th:text="${factura.usuario.username}"></span>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between mb-1">
+                                                                                <span>Teléfono:</span>
+                                                                                <span th:if="${factura.usuario.telefono != null}" th:text="${factura.usuario.telefono}"></span>
+                                                                                <span th:if="${factura.usuario.telefono == null}">No disponible</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Division de tarjetas -->
+                                                                        <!-- Division de tarjetas -->
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Estado del pedido -->
+                                                                <div class="card shadow-sm mb-4">
+                                                                    <div class="card-header bg-white">
+                                                                        <h5 class="mb-0">Estado del pedido</h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <div class="mb-3">
+                                                                            <div class="d-flex justify-content-between mb-1">
+                                                                                <span>Estado actual:</span>
+                                                                                <span class="fw-bold" th:text="${factura.estadoTexto}"></span>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between mb-1">
+                                                                                <span>Fecha del pedido:</span>
+                                                                                <span th:text="${#dates.format(factura.fecha, 'dd/MM/yyyy')}"></span>
+                                                                            </div>
+                                                                            <div th:if="${factura.fechaConfirmacion != null}" class="d-flex justify-content-between mb-1">
+                                                                                <span>Fecha de confirmación:</span>
+                                                                                <span th:text="${#dates.format(factura.fechaConfirmacion, 'dd/MM/yyyy')}"></span>
+                                                                            </div>
+                                                                            <div th:if="${factura.fechaEnvio != null}" class="d-flex justify-content-between mb-1">
+                                                                                <span>Fecha de envío:</span>
+                                                                                <span th:text="${#dates.format(factura.fechaEnvio, 'dd/MM/yyyy')}"></span>
+                                                                            </div>
+                                                                            <div th:if="${factura.fechaEntregaEstimada != null}" class="d-flex justify-content-between mb-1">
+                                                                                <span>Entrega estimada:</span>
+                                                                                <span th:text="${#dates.format(factura.fechaEntregaEstimada, 'dd/MM/yyyy')}"></span>
+                                                                            </div>
+                                                                            <div th:if="${factura.fechaEntregaReal != null}" class="d-flex justify-content-between">
+                                                                                <span>Entrega realizada:</span>
+                                                                                <span th:text="${#dates.format(factura.fechaEntregaReal, 'dd/MM/yyyy')}"></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="progress mb-3" style="height: 5px;">
+                                                                            <div class="progress-bar" role="progressbar" 
+                                                                                 th:style="${'width: ' + (factura.estado <= 6 ? factura.estado * 20 : 100) + '%; background-color: #c49f79;'}" 
+                                                                                 aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                                        </div>
+
+                                                                        <a th:href="@{/factura/seguimiento/{id}(id=${factura.idFactura})}" class="btn btn-sm w-100" style="background-color: #c49f79; color: black;">
+                                                                            <i class="fas fa-truck me-2"></i>Ver seguimiento completo
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Historial reciente -->
+                                                                <div class="card shadow-sm mb-4">
+                                                                    <div class="card-header bg-white">
+                                                                        <h5 class="mb-0">Historial reciente</h5>
+                                                                    </div>
+                                                                    <div class="card-body p-0">
+                                                                        <div class="list-group list-group-flush">
+                                                                            <div th:each="seguimiento : ${seguimientos}" class="list-group-item">
+                                                                                <div class="d-flex w-100 justify-content-between">
+                                                                                    <h6 class="mb-1" th:text="${seguimiento.estado}"></h6>
+                                                                                    <small th:text="${#dates.format(seguimiento.fechaCambio, 'dd/MM/yyyy HH:mm')}"></small>
+                                                                                </div>
+                                                                                <p class="mb-1 small" th:text="${seguimiento.comentario}"></p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-between mt-4">
+                                                                <a th:href="@{/factura/admin-pedidos}" class="btn" style="background-color: #f5f1ec; color: black;">
+                                                                    <i class="fas fa-arrow-left me-2"></i>Volver a listado de pedidos
+                                                                </a>
+                                                                
+                                                            </div>
+                                                            </div>
+        
+        <footer th:replace="~{layout/plantilla :: footer}"></footer>
+        
+        <!-- Script para mostrar campos según estado seleccionado -->
+        <script th:inline="javascript">
+            function mostrarCamposSegunEstado() {
+                const estado = document.getElementById('nuevoEstado').value;
+        
+                // Ocultar todos los campos opcionales primero
+                document.getElementById('campoFechaEnvio').style.display = 'none';
+                document.getElementById('campoFechaEntrega').style.display = 'none';
+                document.getElementById('campoNumeroSeguimiento').style.display = 'none';
+                document.getElementById('campoCancelacion').style.display = 'none';
+        
+                // Mostrar campos según el estado seleccionado
+                if (estado === '4') { // Enviado
+                    document.getElementById('campoFechaEnvio').style.display = 'block';
+                    document.getElementById('campoFechaEntrega').style.display = 'block';
+                    document.getElementById('campoNumeroSeguimiento').style.display = 'block';
+                } else if (estado === '5') { // Entregado
+                    document.getElementById('campoFechaEntrega').style.display = 'block';
+                } else if (estado === '6') { // Cancelado
+                    document.getElementById('campoCancelacion').style.display = 'block';
+                }
+            }
+    
+            // Ejecutar al cargar la página
+            document.addEventListener('DOMContentLoaded', function() {
+                mostrarCamposSegunEstado();
+            });
+        </script>
+        
+    </body>
+</html>

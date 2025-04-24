@@ -139,7 +139,7 @@
                             
                             <!-- Si estamos autenticados mostramos botón de finalizar compra -->
                             <div sec:authorize="isAuthenticated()">
-                                <a href="#" class="btn btn-block w-100" style="background-color: #c49f79; color: black;">
+                                <a th:href="@{/checkout/direcciones}" class="btn btn-block w-100" style="background-color: #c49f79; color: black;">
                                     <i class="fas fa-credit-card me-2"></i>Proceder al pago
                                 </a>
                             </div>
